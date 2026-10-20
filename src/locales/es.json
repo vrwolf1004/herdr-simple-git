@@ -7,5 +7,17 @@
   "commit.nothing": "commit: no hay cambios que confirmar",
   "commit.done": "commit: se confirmaron {count} archivo(s) ({message})",
   "push.nothing": "push: no hay commits que enviar",
-  "push.done": "push: se enviaron {count} commit(s)"
+  "push.done": "push: se enviaron {count} commit(s)",
+  "dock.agent_name": "{count} repositorios",
+  "dock.title": "Repositorios Git",
+  "dock.no_folder": "No hay carpeta definida. Escribe la carpeta que contiene tus repositorios y pulsa Enter.",
+  "dock.folder": "Carpeta: {folder}",
+  "dock.folder_set": "Carpeta definida: {folder}",
+  "dock.folder_missing": "No se encontró la carpeta: {path}",
+  "dock.no_repos": "No hay repositorios git directamente en {folder}.",
+  "dock.help": "Escribe una ruta de carpeta y pulsa Enter. /refresh actualiza ahora.",
+  "dock.clean": "limpio",
+  "dock.changed": "{count} cambiado(s)",
+  "dock.ahead": "{count} sin enviar",
+  "dock.error": "error"
 }

@@ -7,5 +7,17 @@
   "commit.nothing": "commit: нечего коммитить",
   "commit.done": "commit: закоммичено файлов: {count} ({message})",
   "push.nothing": "push: нечего отправлять",
-  "push.done": "push: отправлено коммитов: {count}"
+  "push.done": "push: отправлено коммитов: {count}",
+  "dock.agent_name": "репозиториев: {count}",
+  "dock.title": "Git-репозитории",
+  "dock.no_folder": "Папка не задана. Введите путь к папке с репозиториями и нажмите Enter.",
+  "dock.folder": "Папка: {folder}",
+  "dock.folder_set": "Папка задана: {folder}",
+  "dock.folder_missing": "Папка не найдена: {path}",
+  "dock.no_repos": "В папке {folder} нет git-репозиториев.",
+  "dock.help": "Введите путь к папке и нажмите Enter. /refresh обновляет сразу.",
+  "dock.clean": "без изменений",
+  "dock.changed": "изменено: {count}",
+  "dock.ahead": "не отправлено: {count}",
+  "dock.error": "ошибка"
 }

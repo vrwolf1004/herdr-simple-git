@@ -7,5 +7,17 @@
   "commit.nothing": "commit: nichts zu committen",
   "commit.done": "commit: {count} Datei(en) committet ({message})",
   "push.nothing": "push: nichts zu pushen",
-  "push.done": "push: {count} Commit(s) gepusht"
+  "push.done": "push: {count} Commit(s) gepusht",
+  "dock.agent_name": "{count} Repositorys",
+  "dock.title": "Git-Repositorys",
+  "dock.no_folder": "Kein Ordner gesetzt. Gib den Ordner mit deinen Repositorys ein und drücke Enter.",
+  "dock.folder": "Ordner: {folder}",
+  "dock.folder_set": "Ordner gesetzt: {folder}",
+  "dock.folder_missing": "Ordner nicht gefunden: {path}",
+  "dock.no_repos": "Direkt in {folder} gibt es keine git-Repositorys.",
+  "dock.help": "Gib einen Ordnerpfad ein und drücke Enter. /refresh aktualisiert sofort.",
+  "dock.clean": "sauber",
+  "dock.changed": "{count} geändert",
+  "dock.ahead": "{count} nicht gepusht",
+  "dock.error": "Fehler"
 }

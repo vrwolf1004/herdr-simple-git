@@ -7,5 +7,17 @@
   "commit.nothing": "commit: コミットする変更はありません",
   "commit.done": "commit: {count} 件のファイルをコミットしました ({message})",
   "push.nothing": "push: プッシュするコミットはありません",
-  "push.done": "push: {count} 件のコミットをプッシュしました"
+  "push.done": "push: {count} 件のコミットをプッシュしました",
+  "dock.agent_name": "リポジトリ {count} 件",
+  "dock.title": "Git リポジトリ",
+  "dock.no_folder": "フォルダが設定されていません。リポジトリを含むフォルダのパスを入力して Enter を押してください。",
+  "dock.folder": "フォルダ: {folder}",
+  "dock.folder_set": "フォルダを設定しました: {folder}",
+  "dock.folder_missing": "フォルダが見つかりません: {path}",
+  "dock.no_repos": "{folder} 直下に git リポジトリがありません。",
+  "dock.help": "フォルダのパスを入力して Enter を押してください。/refresh で今すぐ更新します。",
+  "dock.clean": "変更なし",
+  "dock.changed": "変更 {count} 件",
+  "dock.ahead": "プッシュ前 {count} 件",
+  "dock.error": "エラー"
 }
