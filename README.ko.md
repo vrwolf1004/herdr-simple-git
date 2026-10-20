@@ -48,6 +48,17 @@ herdr 안에서 저장소 하나에 대해 `git pull`, `git commit`, `git push`�
 
 action ID는 `local.simple-git.<action>`입니다. 결과 메시지는 아래 설정에 따라 한국어 또는 영어 등으로 나옵니다. 오류는 stderr로 출력되고 종료 코드는 1입니다.
 
+Windows에서 dock 액션 id 뒤에는 `-windows`를 붙입니다. 예를 들어 Windows에서 dock 시작은 `dock-start-windows`입니다.
+
+## Dock 에이전트
+
+| Action | 하는 일 |
+|--------|---------|
+| `dock-start` | `herdr-dock` workspace에 `N repos` 항목 하나를 추가합니다. pane에 입력한 폴더 아래의 git 저장소 목록을 보여 줍니다 |
+| `dock-stop` | 항목을 빼고 pane을 닫습니다 (다른 것이 남아 있지 않을 때만 workspace를 닫습니다) |
+
+항목 상태는 저장소를 따릅니다. 저장소를 읽을 수 없으면 `blocked`, 커밋하지 않았거나 푸시하지 않은 변경이 있으면 `working`, 모두 깨끗하면 `idle`입니다. [Dock 에이전트](docs/dock.md)를 보세요.
+
 ## 언어
 
 메시지는 영어, 한국어(`ko`), 일본어(`ja`), 러시아어(`ru`), 프랑스어(`fr`), 스페인어(`es`), 독일어(`de`)를 지원합니다. 언어는 다음 순서로 정해지고, 먼저 찾은 값을 씁니다:

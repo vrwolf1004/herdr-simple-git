@@ -48,6 +48,17 @@ Run `git pull`, `git commit`, and `git push` on one repository from inside herdr
 
 Action IDs are `local.simple-git.<action>`. Results are printed in English or in your language (see below). Errors go to stderr and exit with code 1.
 
+On Windows, append `-windows` to the dock action ids (`dock-start-windows`, `dock-stop-windows`). On Linux and macOS, use `dock-start` and `dock-stop`.
+
+## Dock agent
+
+| Action | What it does |
+|--------|--------------|
+| `dock-start` | Adds one `N repos` entry to the `herdr-dock` workspace, listing the git repos under the folder you type in its pane |
+| `dock-stop` | Removes the entry and closes its pane (the workspace closes only if nothing else is left in it) |
+
+The entry's state follows the repos: `blocked` if a repo cannot be read, `working` if a repo has uncommitted or unpushed changes, and `idle` when every repo is clean. See [Dock agent](docs/dock.md).
+
 ## Language
 
 The messages are available in English, Korean (`ko`), Japanese (`ja`), Russian (`ru`), French (`fr`), Spanish (`es`), and German (`de`). The language is picked in this order:
