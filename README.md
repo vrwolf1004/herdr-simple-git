@@ -59,7 +59,9 @@ The messages are available in English, Korean (`ko`), Japanese (`ja`), Russian (
 
 ## Documentation
 
+- [Usage](docs/usage.md): overview, install, configuration, actions (Korean: usage.ko.md)
 - [Setup](docs/setup.md): install, configuration files, language, keyboard shortcut, troubleshooting
+- [Troubleshooting](docs/troubleshooting.md): common problems and checks
 - [Actions](docs/actions.md): what each action runs, messages, errors, behavior notes
 - [Dock agent](docs/dock.md): one `N repos` entry in the herdr-dock workspace, with the state of each repo under a folder
 - [Development](docs/development.md): code layout, translations, testing with scratch repositories

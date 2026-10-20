@@ -10,16 +10,16 @@ The dock agent shows how many git repos are in a folder, in herdr's agents panel
   - `idle`: every repo is clean and up to date with its upstream
 - **Focus the entry** (click it in the agents panel): the pane shows each repo with its branch and state.
 
-```
-Git 저장소
+The pane is a boxed panel titled `🐺  herdr-simple-git  🌕`. It shows the folder, then one line per repo with its branch and state, and an input help line at the bottom. Type your input on the line below the box. Korean example of the repo lines:
 
+```
 폴더: C:\work\app
   herdr-talk               main           변경 없음
   herdr-timekit            main           변경 1개
   herdr-simple-git         main           push 전 1개
-
-폴더 경로를 입력하고 Enter를 누르세요. /refresh 는 바로 갱신합니다.
 ```
+
+The bottom help line reads `[folder path] choose folder   [/refresh] update now` in English, and the same keys are translated in the other languages.
 
 ## Choose the folder
 
@@ -37,7 +37,7 @@ herdr plugin action invoke local.simple-git.dock-stop-windows    # Windows
 herdr plugin action invoke local.simple-git.dock-stop            # Linux, macOS
 ```
 
-- `dock-start` creates the `herdr-dock` workspace if it does not exist. It reuses an empty pane there, or splits a new one.
+- `dock-start` creates the `herdr-dock` workspace if it does not exist. It reuses an empty pane there. Otherwise it splits the dock into a 2×2 grid and takes the next free corner (top-left, top-right, bottom-left, bottom-right), the same rule as herdr-ai-feedbag and herdr-radio.
 - `dock-stop` releases the agent and closes its pane. The workspace is closed only if nothing else is left in it.
 - Starting twice is safe. A running host is detected through its heartbeat.
 
@@ -53,6 +53,7 @@ herdr plugin action invoke local.simple-git.dock-stop            # Linux, macOS
 - Repos are found by looking one level down. A repo nested deeper is not listed.
 - The agent count is the number of repos found, so a repo that disappears from the folder drops out on the next refresh.
 - `behind` (commits on the remote you have not pulled) is not shown, because it needs a fetch.
+- If the pane is shorter than the list, the last repos are hidden so the input line stays at the bottom. Enlarge the pane to see them.
 
 ## Files
 

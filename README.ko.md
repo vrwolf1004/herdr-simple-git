@@ -59,7 +59,9 @@ action ID는 `local.simple-git.<action>`입니다. 결과 메시지는 아래 �
 
 ## 문서
 
+- [사용법](docs/usage.ko.md): 개요, 설치, 설정, 액션 (영문: usage.md)
 - [설정](docs/setup.md): 설치, 설정 파일, 언어, 단축키, 문제 해결 (영문)
+- [문제 해결](docs/troubleshooting.md): 자주 겪는 문제와 확인 방법 (영문)
 - [Action](docs/actions.md): 각 action이 하는 일, 메시지, 오류, 동작 참고 (영문)
 - [Dock agent](docs/dock.md): herdr-dock 워크스페이스에 `N repos` 항목 하나, 폴더 아래 각 repo의 상태 (영문)
 - [개발](docs/development.md): 코드 구조, 번역 추가, 임시 저장소로 테스트 (영문)

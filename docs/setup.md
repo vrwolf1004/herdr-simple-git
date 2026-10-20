@@ -91,10 +91,4 @@ Then reload the configuration with `herdr server reload-config`. Pick a key that
 
 ## Troubleshooting
 
-- **`repo.txt` error:** the file is missing or empty. Create it with the repository path.
-- **git failure:** the message says which git command failed and shows git's stderr. Check the repository path and that the upstream is set.
-- **No visible output:** herdr's UI for plugin output is not documented. Read the log instead:
-
-  ```sh
-  herdr plugin log list --plugin local.simple-git
-  ```
+Common problems and checks are in [troubleshooting.md](troubleshooting.md).

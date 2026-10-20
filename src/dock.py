@@ -16,6 +16,7 @@ import json
 import os
 import queue
 import re
+import shutil
 import subprocess
 import sys
 import threading
@@ -49,6 +50,7 @@ LAYOUT_EVERY_TICKS = 3
 ALIVE_WITHIN_SECONDS = 15
 GIT_TIMEOUT_SECONDS = 10
 CURSOR_HOME = "\x1b[H"
+PROMPT = "> "
 ERASE_LINE = "\x1b[K"
 ERASE_BELOW = "\x1b[J"
 AGENT_RANK = {"idle": 0, "working": 1, "blocked": 2}
@@ -171,8 +173,18 @@ def agent_state(repos):
 
 
 def display_width(text):
-    """터미널에서 차지하는 칸 수. 한글과 전각 문자는 두 칸으로 센다."""
+    """터미널에서 차지하는 칸 수. 한글과 전각 문자는 두 칸으로 세고, 색 코드는 세지 않는다."""
+    text = re.sub(r"\x1b\[[0-9;]*m", "", text)
     return sum(2 if unicodedata.east_asian_width(char) in ("W", "F") else 1 for char in text)
+
+
+def dim_keys(text):
+    """줄마다 첫 [ 부터 끝까지, 단축키 안내를 회색으로 한다."""
+    lines = []
+    for line in text.split("\n"):
+        index = line.find("[")
+        lines.append(line if index < 0 else line[:index] + "\x1b[2m" + line[index:] + "\x1b[0m")
+    return "\n".join(lines)
 
 
 def pad_to(text, width):
@@ -218,7 +230,10 @@ def panel(title, sections):
     texts = [title] + [text for section in sections for text in section]
     inner = min(BOX_MAX_INNER, max([BOX_MIN_INNER] + [display_width(text) + 2 for text in texts]))
     width = inner - 2
-    out = ["╭─ " + title + " " + "─" * max(0, inner - display_width(title) - 3) + "╮"]
+    out = ["╭" + "─" * inner + "╮"]
+    left = max(0, (inner - display_width(title)) // 2)
+    out.append("│" + pad_to(" " * left + title, inner) + "│")
+    out.append("├" + "─" * inner + "┤")
     for index, section in enumerate(sections):
         if index:
             out.append("├" + "─" * inner + "┤")
@@ -229,7 +244,7 @@ def panel(title, sections):
     return "\n".join(out)
 
 
-def build_screen(folder, repos):
+def build_screen(folder, repos, max_rows):
     if not folder:
         body = [t("dock.no_folder")]
     elif not os.path.isdir(folder):
@@ -240,11 +255,13 @@ def build_screen(folder, repos):
         listing = [repo_line(repo) for repo in repos] or [t("dock.no_repos", folder=folder)]
     else:
         listing = []
-    sections = [body]
-    if listing:
-        sections.append(listing)
-    sections.append([t("dock.help")])
-    return panel(t("dock.title"), sections)
+    # pane 높이를 넘으면 목록 끝부터 줄인다. 맨 아래 입력줄이 들어갈 자리를 남겨야 스크롤이 생기지 않는다.
+    while True:
+        sections = [body] + ([listing] if listing else []) + [[dim_keys(t("dock.help"))]]
+        screen = panel("🐺  herdr-simple-git  🌕", sections)
+        if len(screen.split("\n")) <= max_rows or len(listing) <= 1:
+            return screen
+        listing = listing[:-1]
 
 
 # ---------------------------------------------------------------- herdr dock
@@ -257,6 +274,31 @@ def is_sidebar(pane):
 def workspace_panes(workspace_id):
     panes = herdr_api.cli("pane", "list").get("panes", [])
     return [p for p in panes if p["workspace_id"] == workspace_id]
+
+
+def grid_split(anchor, cwd):
+    """dock 을 2x2 로 나눈다. 자리는 왼쪽 위, 오른쪽 위, 왼쪽 아래, 오른쪽 아래 순서이고, 빈 자리는 빈 채로 둔다.
+    anchor 로 갈 수 없는 자리는 건너뛴다. 나눌 자리가 없으면 anchor 아래로 나눈다."""
+    layout = herdr_api.cli("pane", "layout", "--pane", anchor)["layout"]
+    area = layout["area"]
+    corners = {}
+    for pane in layout["panes"]:
+        rect = pane["rect"]
+        corners[(0 if rect["x"] <= area["x"] else 1, 0 if rect["y"] <= area["y"] else 1)] = pane["pane_id"]
+    top_left, top_right = corners.get((0, 0)), corners.get((1, 0))
+    bottom_left, bottom_right = corners.get((0, 1)), corners.get((1, 1))
+    if top_left and not top_right:
+        target, direction = top_left, "right"
+    elif top_left and not bottom_left:
+        target, direction = top_left, "down"
+    elif top_right and not bottom_right:
+        target, direction = top_right, "down"
+    elif bottom_left and not bottom_right:
+        target, direction = bottom_left, "right"
+    else:
+        target, direction = anchor, "down"
+    split = herdr_api.cli("pane", "split", target, "--direction", direction, "--cwd", cwd)
+    return split["pane"]["pane_id"]
 
 
 def ensure_workspace():
@@ -285,8 +327,7 @@ def ensure_workspace():
             anchor = next((p["pane_id"] for p in panes if not is_sidebar(p)), None)
             if anchor is None:
                 raise herdr_api.HerdrError(f"workspace {workspace_id} has no pane")
-            split = herdr_api.cli("pane", "split", anchor, "--direction", "down", "--cwd", str(state_dir()))
-            pane_id = split["pane"]["pane_id"]
+            pane_id = grid_split(anchor, str(state_dir()))
     write_state("pane.id", pane_id)
     return workspace_id, pane_id
 
@@ -362,11 +403,12 @@ def cmd_host(args):
             tick += 1
             if tick % LAYOUT_EVERY_TICKS == 0:
                 keep_at_bottom()
-            screen = build_screen(folder, repos)
+            screen = build_screen(folder, repos, shutil.get_terminal_size((80, 24)).lines - 1)
             if screen != shown:
                 # 같은 자리에 덮어쓴다. 화면을 지우면 터미널 스크롤백에 이전 프레임이 쌓인다.
+                # 입력줄은 맨 아래 줄에 둔다. 입력한 글자는 이 줄에 바로 보인다.
                 painted = "\n".join(line + ERASE_LINE for line in screen.split("\n"))
-                print(CURSOR_HOME + painted + ERASE_BELOW, end="", flush=True)
+                print(CURSOR_HOME + painted + "\n" + ERASE_LINE + PROMPT + ERASE_BELOW, end="", flush=True)
                 shown = screen
             next_refresh = now + TICK_SECONDS
         try:
