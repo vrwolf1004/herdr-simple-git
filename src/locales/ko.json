@@ -1,0 +1,11 @@
+{
+  "error.no_repo_config": "{path} 에 저장소 경로를 적어주세요",
+  "error.git_failed": "git {args} 실패\n{stderr}",
+  "error.unknown_action": "알 수 없는 action: {action}",
+  "update.up_to_date": "update: 이미 최신",
+  "update.pulled": "update: {count}개 커밋 받음",
+  "commit.nothing": "commit: 커밋할 변경 없음",
+  "commit.done": "commit: {count}개 파일 커밋 ({message})",
+  "push.nothing": "push: 푸시할 커밋 없음",
+  "push.done": "push: {count}개 커밋 푸시"
+}

@@ -1,0 +1,11 @@
+{
+  "error.no_repo_config": "{path} にリポジトリのパスを書いてください",
+  "error.git_failed": "git {args} に失敗しました\n{stderr}",
+  "error.unknown_action": "不明な action: {action}",
+  "update.up_to_date": "update: すでに最新です",
+  "update.pulled": "update: {count} 件のコミットを取得しました",
+  "commit.nothing": "commit: コミットする変更はありません",
+  "commit.done": "commit: {count} 件のファイルをコミットしました ({message})",
+  "push.nothing": "push: プッシュするコミットはありません",
+  "push.done": "push: {count} 件のコミットをプッシュしました"
+}

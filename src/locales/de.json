@@ -1,0 +1,11 @@
+{
+  "error.no_repo_config": "Trage den Repository-Pfad in {path} ein",
+  "error.git_failed": "git {args} fehlgeschlagen\n{stderr}",
+  "error.unknown_action": "Unbekannte Aktion: {action}",
+  "update.up_to_date": "update: bereits aktuell",
+  "update.pulled": "update: {count} Commit(s) geholt",
+  "commit.nothing": "commit: nichts zu committen",
+  "commit.done": "commit: {count} Datei(en) committet ({message})",
+  "push.nothing": "push: nichts zu pushen",
+  "push.done": "push: {count} Commit(s) gepusht"
+}

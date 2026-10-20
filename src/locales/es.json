@@ -1,0 +1,11 @@
+{
+  "error.no_repo_config": "Escribe la ruta del repositorio en {path}",
+  "error.git_failed": "git {args} falló\n{stderr}",
+  "error.unknown_action": "Acción desconocida: {action}",
+  "update.up_to_date": "update: ya está actualizado",
+  "update.pulled": "update: se recibieron {count} commit(s)",
+  "commit.nothing": "commit: no hay cambios que confirmar",
+  "commit.done": "commit: se confirmaron {count} archivo(s) ({message})",
+  "push.nothing": "push: no hay commits que enviar",
+  "push.done": "push: se enviaron {count} commit(s)"
+}

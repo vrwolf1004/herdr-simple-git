@@ -1,0 +1,11 @@
+{
+  "error.no_repo_config": "Укажите путь к репозиторию в {path}",
+  "error.git_failed": "Ошибка git {args}\n{stderr}",
+  "error.unknown_action": "Неизвестное действие: {action}",
+  "update.up_to_date": "update: уже актуально",
+  "update.pulled": "update: получено коммитов: {count}",
+  "commit.nothing": "commit: нечего коммитить",
+  "commit.done": "commit: закоммичено файлов: {count} ({message})",
+  "push.nothing": "push: нечего отправлять",
+  "push.done": "push: отправлено коммитов: {count}"
+}

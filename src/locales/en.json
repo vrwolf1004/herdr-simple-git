@@ -1,0 +1,11 @@
+{
+  "error.no_repo_config": "Write the repository path in {path}",
+  "error.git_failed": "git {args} failed\n{stderr}",
+  "error.unknown_action": "Unknown action: {action}",
+  "update.up_to_date": "update: already up to date",
+  "update.pulled": "update: pulled {count} commit(s)",
+  "commit.nothing": "commit: nothing to commit",
+  "commit.done": "commit: committed {count} file(s) ({message})",
+  "push.nothing": "push: nothing to push",
+  "push.done": "push: pushed {count} commit(s)"
+}

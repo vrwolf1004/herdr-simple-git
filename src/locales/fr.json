@@ -1,0 +1,11 @@
+{
+  "error.no_repo_config": "Indiquez le chemin du dépôt dans {path}",
+  "error.git_failed": "échec de git {args}\n{stderr}",
+  "error.unknown_action": "Action inconnue : {action}",
+  "update.up_to_date": "update : déjà à jour",
+  "update.pulled": "update : {count} commit(s) récupéré(s)",
+  "commit.nothing": "commit : aucune modification à valider",
+  "commit.done": "commit : {count} fichier(s) validé(s) ({message})",
+  "push.nothing": "push : aucun commit à envoyer",
+  "push.done": "push : {count} commit(s) envoyé(s)"
+}
