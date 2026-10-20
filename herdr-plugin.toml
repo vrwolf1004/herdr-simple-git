@@ -1,0 +1,30 @@
+id = "local.simple-git"
+name = "Herdr Simple Git"
+version = "0.1.0"
+min_herdr_version = "0.9.0"
+description = "Pull, commit, and push one repository without AI"
+platforms = ["windows", "linux", "macos"]
+
+[[actions]]
+id = "update"
+title = "Git update (pull --ff-only)"
+contexts = ["workspace"]
+command = ["node", "index.js", "update"]
+
+[[actions]]
+id = "commit"
+title = "Git commit all changes"
+contexts = ["workspace"]
+command = ["node", "index.js", "commit"]
+
+[[actions]]
+id = "push"
+title = "Git push"
+contexts = ["workspace"]
+command = ["node", "index.js", "push"]
+
+[[actions]]
+id = "all"
+title = "Git update, commit, push"
+contexts = ["workspace"]
+command = ["node", "index.js", "all"]
