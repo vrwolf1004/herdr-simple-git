@@ -48,7 +48,9 @@ TOKEN_TTL_MS = 15_000
 LAYOUT_EVERY_TICKS = 3
 ALIVE_WITHIN_SECONDS = 15
 GIT_TIMEOUT_SECONDS = 10
-CLEAR_SCREEN = "\x1b[2J\x1b[H"
+CURSOR_HOME = "\x1b[H"
+ERASE_LINE = "\x1b[K"
+ERASE_BELOW = "\x1b[J"
 AGENT_RANK = {"idle": 0, "working": 1, "blocked": 2}
 BOX_MIN_INNER = 44
 BOX_MAX_INNER = 64
@@ -362,7 +364,9 @@ def cmd_host(args):
                 keep_at_bottom()
             screen = build_screen(folder, repos)
             if screen != shown:
-                print(CLEAR_SCREEN + screen, flush=True)
+                # 같은 자리에 덮어쓴다. 화면을 지우면 터미널 스크롤백에 이전 프레임이 쌓인다.
+                painted = "\n".join(line + ERASE_LINE for line in screen.split("\n"))
+                print(CURSOR_HOME + painted + ERASE_BELOW, end="", flush=True)
                 shown = screen
             next_refresh = now + TICK_SECONDS
         try:
