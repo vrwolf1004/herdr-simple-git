@@ -2,78 +2,51 @@
 
 [**English**](README.md) | [한국어](README.ko.md)
 
-Run `git pull`, `git commit`, and `git push` on one repository from inside herdr. No AI. Each action prints a short status line such as "pulled 3 commit(s)" or "pushed 1 commit(s)".
+🌐 UI languages: 🇺🇸 English (en) · 🇰🇷 한국어 (ko) · 🇷🇺 Русский (ru) · 🇫🇷 Français (fr) · 🇪🇸 Español (es) · 🇩🇪 Deutsch (de) · 🇯🇵 日本語 (ja)
+
+Run `git pull`, `git commit`, and `git push` for a configured repository from inside herdr, without AI.
+
+## Dashboard design
+
+The optional dock agent lists repositories under a folder and shows whether each is clean, has local changes, or has unpushed commits.
+
+## Installation
+
+```sh
+herdr plugin install vrwolf1004/herdr-simple-git
+```
+
+## Actions
+
+| Action | What it does |
+| --- | --- |
+| `local.simple-git.update` | Run `git pull --ff-only` |
+| `local.simple-git.commit` | Stage all changes and commit |
+| `local.simple-git.push` | Run `git push` |
+| `local.simple-git.all` | Update, commit, then push; stop on the first failure |
+| `dock-start` / `dock-stop` | Show or hide the repository dock agent |
+
+Append `-windows` to the dock action IDs on Windows. Configure the repository before running Git actions; see the [usage guide](docs/usage.md).
 
 ## Requirements
 
 - herdr 0.9.0 or later
 - Python 3.10 or later
 - Git on `PATH`
-- A repository that already exists and has an upstream branch set
-
-## Quick start
-
-1. Install the plugin:
-
-   ```sh
-   herdr plugin install vrwolf1004/herdr-simple-git
-   ```
-
-2. Create `repo.txt` in the plugin's config folder with the absolute path of the repository to sync. Find the folder with:
-
-   ```sh
-   herdr plugin config-dir local.simple-git
-   ```
-
-   For example, put this line in `repo.txt`:
-
-   ```
-   C:\work\app
-   ```
-
-3. Run an action:
-
-   ```sh
-   herdr plugin action invoke local.simple-git.all
-   ```
-
-## Actions
-
-| Action | What it does |
-|--------|--------------|
-| `update` | `git pull --ff-only` |
-| `commit` | `git add -A`, then `git commit` with `commit-message.txt` or a timestamp message |
-| `push` | `git push` |
-| `all` | `update`, then `commit`, then `push`. Stops at the first failure |
-
-Action IDs are `local.simple-git.<action>`. Results are printed in English or in your language (see below). Errors go to stderr and exit with code 1.
-
-On Windows, append `-windows` to the dock action ids (`dock-start-windows`, `dock-stop-windows`). On Linux and macOS, use `dock-start` and `dock-stop`.
-
-## Dock agent
-
-| Action | What it does |
-|--------|--------------|
-| `dock-start` | Adds one `N repos` entry to the `herdr-dock` workspace, listing the git repos under the folder you type in its pane |
-| `dock-stop` | Removes the entry and closes its pane (the workspace closes only if nothing else is left in it) |
-
-The entry's state follows the repos: `blocked` if a repo cannot be read, `working` if a repo has uncommitted or unpushed changes, and `idle` when every repo is clean. See [Dock agent](docs/dock.md).
-Pressing Ctrl+C in the dock pane stops its host cleanly without closing the pane; use `dock-stop` to remove the entry and close the pane.
-
-## Language
-
-The messages are available in English, Korean (`ko`), Japanese (`ja`), Russian (`ru`), French (`fr`), Spanish (`es`), and German (`de`). The language is picked in this order:
-
-1. Environment variable `HERDR_SIMPLE_GIT_LANG`
-2. `lang` in `config.json` in the config folder, for example `{ "lang": "ko" }`
-3. The OS language
-4. English
+- An existing repository with an upstream branch configured
 
 ## Documentation
 
-- [Usage](docs/usage.md): overview, install, configuration, actions (Korean: usage.ko.md)
-- [Setup](docs/setup.md): install, configuration files, language, keyboard shortcut, troubleshooting
-- [Troubleshooting](docs/troubleshooting.md): common problems and checks
-- [Actions](docs/actions.md): what each action runs, messages, errors, behavior notes
-- [Dock agent](docs/dock.md): one `N repos` entry in the herdr-dock workspace, with the state of each repo under a folder
-- [Development](docs/development.md): code layout, translations, testing with scratch repositories
+- [Usage (English)](docs/usage.md)
+- [사용법 (한국어)](docs/usage.ko.md)
+- [Setup](docs/setup.md)
+- [Actions](docs/actions.md)
+- [Dock agent](docs/dock.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [Development](docs/development.md)
+
+## Support the project
+
+If this project is useful to you, consider buying the developer a coffee.
+
+[![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-Support-FF5E5B?style=for-the-badge&logo=buymeacoffee&logoColor=white)](https://ko-fi.com/dev_ohyt)
