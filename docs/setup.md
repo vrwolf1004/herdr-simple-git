@@ -72,7 +72,7 @@ A message missing in the chosen language falls back to English.
 ## Git prerequisites for the repository
 
 - `update` uses `git pull --ff-only`, so the current branch needs an upstream branch set.
-- `push` uses `git push` and needs an upstream as well. Set one once with `git push -u origin <branch>`.
+- `push` uses `git push`. If the current branch has no upstream, the action prints `git push -u origin <branch>` as guidance and does not push.
 - `commit` runs `git add -A`, so untracked files are staged unless they match `.gitignore`. Check `.gitignore` before using `commit` on a new repository.
 
 ## Optional: keyboard shortcut

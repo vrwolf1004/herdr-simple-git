@@ -18,7 +18,7 @@ Create `repo.txt` in the plugin's config folder with the absolute path of the re
 herdr plugin config-dir local.simple-git
 ```
 
-The repository must already exist and have an upstream branch set. Details are in [Setup: Configure](setup.md#configure) and [Setup: Git prerequisites](setup.md#git-prerequisites-for-the-repository).
+The repository must already exist. `update` needs an upstream branch; `commit` does not. If `push` has no upstream, it prints setup guidance and does not push. Details are in [Setup: Configure](setup.md#configure) and [Setup: Git prerequisites](setup.md#git-prerequisites-for-the-repository).
 
 ## 3. Actions
 

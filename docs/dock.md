@@ -7,7 +7,7 @@ The dock agent shows how many git repos are in a folder, in herdr's agents panel
 - **Agents panel:** one entry named `N repos`. Its state follows the repos:
   - `blocked`: a repo cannot be read (for example, a broken `.git`)
   - `working`: a repo has uncommitted changes or unpushed commits
-  - `idle`: every repo is clean and up to date with its upstream
+  - `idle`: no repo has local changes or commits ahead of its locally recorded upstream state
 - **Focus the entry** (click it in the agents panel): the pane shows each repo with its branch and state.
 
 The pane is a boxed panel titled `🐺  herdr-simple-git  🌕`. It shows the folder, then one line per repo with its branch and state, and an input help line at the bottom. Type your input on the line below the box. Korean example of the repo lines:
@@ -45,7 +45,7 @@ herdr plugin action invoke local.simple-git.dock-stop            # Linux, macOS
 ## How it works
 
 - The host loop runs inside the dock pane. Closing the pane stops it.
-- Each refresh runs `git status --porcelain=v1 -b` for every repo. No fetch and no network, so `ahead` shows only commits you have not pushed yet, based on the last fetch.
+- Each scan runs `git status --porcelain=v1 -b` for every repo (with a 10-second timeout per repo). Scanning runs in a background thread so it does not block pane input. There is no fetch or network access; `ahead` is based on the locally recorded upstream state, typically from the last fetch.
 - Every third refresh, the workspace is moved to the bottom of the list, as herdr-timekit does.
 - The host reads the state, config, and language paths from `start`, because the pane does not get the `HERDR_PLUGIN_*` variables.
 
@@ -53,7 +53,7 @@ herdr plugin action invoke local.simple-git.dock-stop            # Linux, macOS
 
 - Repos are found by looking one level down. A repo nested deeper is not listed.
 - The agent count is the number of repos found, so a repo that disappears from the folder drops out on the next refresh.
-- `behind` (commits on the remote you have not pulled) is not shown, because it needs a fetch.
+- Remote commits you have not pulled are not checked. Because the dock does not fetch, `idle` does not establish that a repository is currently up to date with its remote.
 - If the pane is shorter than the list, the last repos are hidden so the input line stays at the bottom. Enlarge the pane to see them.
 
 ## Files

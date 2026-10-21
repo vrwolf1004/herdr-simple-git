@@ -18,7 +18,7 @@ herdr plugin install vrwolf1004/herdr-simple-git
 herdr plugin config-dir local.simple-git
 ```
 
-저장소는 이미 있어야 하고, upstream 브랜치가 설정되어 있어야 합니다. 자세한 내용은 [설정: 설정 파일](setup.md#configure)과 [설정: Git 준비 사항](setup.md#git-prerequisites-for-the-repository)에 있습니다.
+저장소는 이미 있어야 합니다. `update`에는 upstream 브랜치가 필요하지만 `commit`에는 필요하지 않습니다. `push`에 upstream이 없으면 설정 방법을 출력하고 push하지 않습니다. 자세한 내용은 [설정: 설정 파일](setup.md#configure)과 [설정: Git 준비 사항](setup.md#git-prerequisites-for-the-repository)에 있습니다.
 
 ## 3. 액션
 

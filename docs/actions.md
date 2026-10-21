@@ -1,6 +1,6 @@
 # Actions
 
-`herdr-simple-git` provides four actions. Each one runs a single command against the repository set in `repo.txt` and prints a one-line result. There is no AI and no interactive prompt.
+`herdr-simple-git` provides four repository actions. `update`, `commit`, and `push` run the corresponding Git operation against the repository set in `repo.txt`; `all` runs those three actions in order. Actions do not use AI or ask interactive questions.
 
 | Action ID | Title | Runs |
 | --- | --- | --- |
@@ -32,11 +32,13 @@ Each action prints one line on success. The text is translated (see [setup](setu
 
 ## Errors
 
-Any failure prints a message to stderr and exits with code 1. Common messages (English versions):
+Git command failures print a message to stderr and exit with code 1. Common messages (English versions):
 
 - `Write the repository path in <path>\repo.txt`: `repo.txt` is missing. See [setup](setup.md#configure).
-- `git <args> failed` followed by git's stderr: a git command failed, for example a pull that cannot fast-forward, or a push with no upstream.
+- `git <args> failed` followed by git's stderr: a git command failed, for example a pull that cannot fast-forward.
 - `Unknown action: <name>`: the plugin was invoked with an action name it does not know. This happens only when the manifest and `src/index.py` are out of sync.
+
+`push` prints guidance and returns without pushing when the branch has no upstream or is detached; these cases are not reported as Git command failures.
 
 ## Behavior notes
 
@@ -44,3 +46,4 @@ Any failure prints a message to stderr and exits with code 1. Common messages (E
 - `commit` stages everything with `git add -A`. Files matching `.gitignore` are skipped.
 - `commit` and `all` use `commit-message.txt` if it exists. Otherwise the message is `update` followed by the local time.
 - `push` checks how many commits are ahead of the upstream before pushing. If there are none, it does nothing.
+- A branch without an upstream prints the `git push -u origin <branch>` command to set one. A detached `HEAD` has no branch to push.

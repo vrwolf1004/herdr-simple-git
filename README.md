@@ -20,7 +20,7 @@ Dock pane:
 ╭─────────────────────────────────────────────────────────────╮
 │              🐺  herdr-simple-git  🌕                      │
 ├─────────────────────────────────────────────────────────────┤
-│ Folder: C:\\work\\app                                        │
+│ Folder: C:\work\app                                          │
 │ herdr-talk               main           clean               │
 │ herdr-timekit            main           1 changed           │
 │ herdr-simple-git         main           1 ahead             │
@@ -29,7 +29,7 @@ Dock pane:
 ╰─────────────────────────────────────────────────────────────╯
 ```
 
-The optional dock agent lists repositories under a folder and shows whether each is clean, has local changes, or has unpushed commits.
+The optional dock agent lists repositories directly under a folder and shows local changes and commits ahead of each branch's locally recorded upstream state. It does not fetch.
 
 ## Installation
 
@@ -47,14 +47,14 @@ herdr plugin install vrwolf1004/herdr-simple-git
 | `local.simple-git.all` | Update, commit, then push; stop on the first failure |
 | `dock-start` / `dock-stop` | Show or hide the repository dock agent |
 
-Append `-windows` to the dock action IDs on Windows. Configure the repository before running Git actions; see the [usage guide](docs/usage.md).
+Append `-windows` to the dock action IDs on Windows. Configure the repository before running Git actions. The current branch needs an upstream for `update`; see the [usage guide](docs/usage.md).
 
 ## Requirements
 
 - herdr 0.9.0 or later
 - Python 3.10 or later
 - Git on `PATH`
-- An existing repository with an upstream branch configured
+- An existing Git repository; `update` requires an upstream branch
 
 ## Documentation
 
@@ -65,6 +65,7 @@ Append `-windows` to the dock action IDs on Windows. Configure the repository be
 - [Dock agent](docs/dock.md)
 - [Troubleshooting](docs/troubleshooting.md)
 - [Development](docs/development.md)
+- [TODO](docs/todo.md)
 
 ## Support the project
 

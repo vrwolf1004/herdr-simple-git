@@ -5,9 +5,14 @@
 ```
 herdr-simple-git/
   herdr-plugin.toml   plugin manifest: id, version, and action commands
-  src/index.py        action implementation (Python standard library only)
+  src/index.py        update, commit, push, and all action implementation
+  src/gitstatus.py    porcelain status and branch parsing, shared by actions and dock
+  src/dock.py         optional repository dock agent and background scanner
+  src/herdr_api.py    herdr CLI and socket helpers
+  src/intro.py        shared dock introduction pane
   src/i18n.py         language detection and t() for translated messages
   src/locales/        one <language>.json per supported language
+  tests/              unittest coverage for status/branch parsing, repository actions, and scanning
   docs/               documentation
   README.md           English README
   README.ko.md        Korean README
@@ -41,6 +46,14 @@ Re-link after changing `herdr-plugin.toml`, because herdr reads the manifest whe
 ```sh
 herdr plugin unlink local.simple-git
 herdr plugin link "C:\path\to\herdr-simple-git"
+```
+
+## Run the tests
+
+From the plugin folder:
+
+```sh
+python -m unittest discover -s tests
 ```
 
 ## Run the script without herdr

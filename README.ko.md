@@ -20,7 +20,7 @@ Dock pane:
 ╭─────────────────────────────────────────────────────────────╮
 │              🐺  herdr-simple-git  🌕                      │
 ├─────────────────────────────────────────────────────────────┤
-│ 폴더: C:\\work\\app                                           │
+│ 폴더: C:\work\app                                             │
 │ herdr-talk               main           변경 없음           │
 │ herdr-timekit            main           변경 1개            │
 │ herdr-simple-git         main           push 전 1개          │
@@ -29,7 +29,7 @@ Dock pane:
 ╰─────────────────────────────────────────────────────────────╯
 ```
 
-선택 기능인 dock 에이전트는 폴더 아래의 저장소 목록과 각 저장소가 깨끗한지, 변경사항이나 푸시할 커밋이 있는지 보여 줍니다.
+선택 기능인 dock 에이전트는 지정한 폴더 바로 아래의 저장소와 로컬 변경사항, 로컬에 기록된 upstream보다 앞선 커밋을 보여 줍니다. 원격에서 fetch하지는 않습니다.
 
 ## 설치
 
@@ -47,14 +47,14 @@ herdr plugin install vrwolf1004/herdr-simple-git
 | `local.simple-git.all` | 업데이트, 커밋, 푸시를 순서대로 실행하고 실패 시 중단 |
 | `dock-start` / `dock-stop` | 저장소 dock 에이전트 표시 또는 숨기기 |
 
-Windows에서는 dock 액션 ID 뒤에 `-windows`를 붙입니다. Git 액션 전에 저장소 경로를 설정하세요. 자세한 방법은 [사용법](docs/usage.ko.md)을 참고하세요.
+Windows에서는 dock 액션 ID 뒤에 `-windows`를 붙입니다. Git 액션 전에 저장소 경로를 설정하세요. `update`에는 현재 브랜치의 upstream이 필요합니다. 자세한 방법은 [사용법](docs/usage.ko.md)을 참고하세요.
 
 ## 요구 사항
 
 - herdr 0.9.0 이상
 - Python 3.10 이상
 - `PATH`에 Git이 있어야 함
-- upstream 브랜치가 설정된 기존 저장소
+- 기존 Git 저장소 (`update`에는 upstream 브랜치 필요)
 
 ## 문서
 
@@ -65,6 +65,7 @@ Windows에서는 dock 액션 ID 뒤에 `-windows`를 붙입니다. Git 액션 �
 - [Dock 에이전트](docs/dock.md)
 - [문제 해결](docs/troubleshooting.md)
 - [개발](docs/development.md)
+- [할 일](docs/todo.md)
 
 ## 프로젝트 응원하기
 
