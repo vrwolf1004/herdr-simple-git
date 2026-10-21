@@ -2,7 +2,7 @@
 
 [English](README.md) | [**한국어**](README.ko.md)
 
-🌐 UI 언어: 🇺🇸 English (en) · 🇰🇷 한국어 (ko) · 🇷🇺 Русский (ru) · 🇫🇷 Français (fr) · 🇪🇸 Español (es) · 🇩🇪 Deutsch (de) · 🇯🇵 日本語 (ja)
+지원 언어: 영어 · 한국어 · 러시아어 · 프랑스어 · 스페인어 · 독일어 · 일본어
 
 설정한 저장소에서 `git pull`, `git commit`, `git push`를 herdr 안에서 AI 없이 실행합니다.
 

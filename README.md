@@ -2,7 +2,7 @@
 
 [**English**](README.md) | [한국어](README.ko.md)
 
-🌐 UI languages: 🇺🇸 English (en) · 🇰🇷 한국어 (ko) · 🇷🇺 Русский (ru) · 🇫🇷 Français (fr) · 🇪🇸 Español (es) · 🇩🇪 Deutsch (de) · 🇯🇵 日本語 (ja)
+UI languages: English · Korean · Russian · French · Spanish · German · Japanese
 
 Run `git pull`, `git commit`, and `git push` for a configured repository from inside herdr, without AI.
 
