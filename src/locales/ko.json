@@ -18,5 +18,7 @@
   "dock.clean": "변경 없음",
   "dock.changed": "변경 {count}개",
   "dock.ahead": "push 전 {count}개",
-  "dock.error": "오류"
+  "dock.error": "오류",
+  "push.no_upstream": "push: '{branch}' 브랜치에 upstream 이 없습니다. `git push -u origin {branch}` 로 설정하세요",
+  "push.detached": "push: detached HEAD 상태라 push 할 브랜치가 없습니다"
 }

@@ -18,5 +18,7 @@
   "dock.clean": "limpio",
   "dock.changed": "{count} cambiado(s)",
   "dock.ahead": "{count} sin enviar",
-  "dock.error": "error"
+  "dock.error": "error",
+  "push.no_upstream": "push: la rama '{branch}' no tiene upstream. Configúrelo con: git push -u origin {branch}",
+  "push.detached": "push: HEAD separado, nada que enviar"
 }

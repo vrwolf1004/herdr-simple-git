@@ -25,6 +25,7 @@ import unicodedata
 from pathlib import Path
 
 import herdr_api
+from gitstatus import ahead_count, parse_branch, parse_status_z
 
 
 def _apply_flags_to_environment(argv):
@@ -52,6 +53,7 @@ TOKEN_TTL_MS = 15_000
 LAYOUT_EVERY_TICKS = 3
 ALIVE_WITHIN_SECONDS = 15
 GIT_TIMEOUT_SECONDS = 10
+SCAN_MIN_SECONDS = 2  # 백그라운드 스캔은 이 간격보다 자주 하지 않는다
 CURSOR_HOME = "\x1b[H"
 PROMPT = "> "
 ERASE_LINE = "\x1b[K"
@@ -129,18 +131,11 @@ def find_repos(folder):
     ]
 
 
-def parse_branch(line):
-    text = line[3:]
-    if text.startswith("No commits yet on "):
-        return text[len("No commits yet on "):]
-    return text.split("...")[0].split(" ")[0]
-
-
 def repo_status(path):
     status = {"name": os.path.basename(path), "branch": "", "changed": 0, "ahead": 0, "error": False}
     try:
         result = subprocess.run(
-            ["git", "-C", path, "status", "--porcelain=v1", "-b"],
+            ["git", "-C", path, "status", "--porcelain=v1", "-b", "-z"],
             capture_output=True,
             text=True,
             encoding="utf-8",
@@ -153,13 +148,11 @@ def repo_status(path):
     if result.returncode != 0:
         status["error"] = True
         return status
-    lines = result.stdout.splitlines()
-    if lines and lines[0].startswith("## "):
-        status["branch"] = parse_branch(lines[0])
-        ahead = re.search(r"ahead (\d+)", lines[0])
-        status["ahead"] = int(ahead.group(1)) if ahead else 0
-        lines = lines[1:]
-    status["changed"] = len(lines)
+    header = next((token for token in result.stdout.split("\0") if token.startswith("## ")), "")
+    if header:
+        status["branch"] = parse_branch(header)
+        status["ahead"] = ahead_count(header)
+    status["changed"] = len(parse_status_z(result.stdout))
     return status
 
 
@@ -411,11 +404,46 @@ def handle_input(text, folder):
     return folder, True
 
 
+class RepoScanner:
+    """저장소 상태를 백그라운드 스레드에서 모은다. 입력 루프는 기다리지 않고 마지막 결과를 쓴다.
+
+    요청은 folder 를 바꿔 두고 event 를 세운다. 스캔은 SCAN_MIN_SECONDS 간격보다 자주 하지 않는다.
+    """
+
+    def __init__(self):
+        self.lock = threading.Lock()
+        self.wanted = None
+        self.result = (None, [])  # (스캔한 folder, 저장소 상태 목록)
+        self.event = threading.Event()
+        threading.Thread(target=self.run, daemon=True).start()
+
+    def request(self, folder):
+        with self.lock:
+            self.wanted = folder
+        self.event.set()
+
+    def latest(self):
+        with self.lock:
+            return self.result
+
+    def run(self):
+        while True:
+            self.event.wait()
+            self.event.clear()
+            with self.lock:
+                folder = self.wanted
+            repos = [repo_status(path) for path in find_repos(folder or "")]
+            with self.lock:
+                self.result = (folder, repos)
+            time.sleep(SCAN_MIN_SECONDS)
+
+
 def cmd_host(args):
     pane_id = args.pane
     lines = queue.Queue()
     threading.Thread(target=read_lines, args=(lines,), daemon=True).start()
     folder = load_config().get("folder") or ""
+    scanner = RepoScanner()
     shown = None
     last_state = None
     tick = 0
@@ -423,7 +451,8 @@ def cmd_host(args):
     while True:
         now = time.monotonic()
         if now >= next_refresh:
-            repos = [repo_status(path) for path in find_repos(folder)]
+            scanner.request(folder)
+            _, repos = scanner.latest()
             state = agent_state(repos)
             report(pane_id, state, len(repos), state != last_state)
             last_state = state

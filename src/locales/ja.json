@@ -18,5 +18,7 @@
   "dock.clean": "変更なし",
   "dock.changed": "変更 {count} 件",
   "dock.ahead": "プッシュ前 {count} 件",
-  "dock.error": "エラー"
+  "dock.error": "エラー",
+  "push.no_upstream": "push: ブランチ '{branch}' に upstream がありません。git push -u origin {branch} で設定してください",
+  "push.detached": "push: detached HEAD のため push するブランチがありません"
 }

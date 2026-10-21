@@ -18,5 +18,7 @@
   "dock.clean": "без изменений",
   "dock.changed": "изменено: {count}",
   "dock.ahead": "не отправлено: {count}",
-  "dock.error": "ошибка"
+  "dock.error": "ошибка",
+  "push.no_upstream": "push: у ветки '{branch}' нет upstream. Задайте: git push -u origin {branch}",
+  "push.detached": "push: detached HEAD, пушить нечего"
 }

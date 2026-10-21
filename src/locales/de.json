@@ -18,5 +18,7 @@
   "dock.clean": "sauber",
   "dock.changed": "{count} geändert",
   "dock.ahead": "{count} nicht gepusht",
-  "dock.error": "Fehler"
+  "dock.error": "Fehler",
+  "push.no_upstream": "push: Branch '{branch}' hat kein upstream. Einrichten mit: git push -u origin {branch}",
+  "push.detached": "push: detached HEAD, nichts zu pushen"
 }
