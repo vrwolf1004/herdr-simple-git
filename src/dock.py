@@ -473,6 +473,7 @@ def cmd_stop(_args):
         others = [p for p in workspace_panes(workspace_id) if p["pane_id"] != pane_id and not is_sidebar(p)]
         if others and pane_id:
             herdr_api.cli("pane", "close", pane_id, check=False)
+            ensure_intro(workspace_id, None, str(state_dir()))  # 블록이 빠져 생긴 빈 칸에 소개를 띄운다
         else:
             herdr_api.cli("workspace", "close", workspace_id, check=False)
     for name in ("pane.id", "workspace.id", "heartbeat", "starting"):
