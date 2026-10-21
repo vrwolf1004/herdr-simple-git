@@ -8,6 +8,27 @@ Run `git pull`, `git commit`, and `git push` for a configured repository from in
 
 ## Dashboard design
 
+Agents sidebar:
+
+```text
+◐ 3 repos
+```
+
+Dock pane:
+
+```text
+╭─────────────────────────────────────────────────────────────╮
+│              🐺  herdr-simple-git  🌕                      │
+├─────────────────────────────────────────────────────────────┤
+│ Folder: C:\\work\\app                                        │
+│ herdr-talk               main           clean               │
+│ herdr-timekit            main           1 changed           │
+│ herdr-simple-git         main           1 ahead             │
+├─────────────────────────────────────────────────────────────┤
+│ [folder path] choose folder   [/refresh] update now         │
+╰─────────────────────────────────────────────────────────────╯
+```
+
 The optional dock agent lists repositories under a folder and shows whether each is clean, has local changes, or has unpushed commits.
 
 ## Installation
