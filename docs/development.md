@@ -38,7 +38,7 @@ Link the folder, then invoke an action through herdr:
 
 ```sh
 herdr plugin link "C:\path\to\herdr-simple-git"
-herdr plugin action invoke local.simple-git.update
+herdr plugin action invoke update --plugin local.simple-git
 ```
 
 Re-link after changing `herdr-plugin.toml`, because herdr reads the manifest when the plugin is linked:

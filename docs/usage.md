@@ -32,7 +32,7 @@ The repository must already exist. `update` needs an upstream branch; `commit` d
 Invoke one from the command line:
 
 ```sh
-herdr plugin action invoke local.simple-git.update
+herdr plugin action invoke update --plugin local.simple-git
 ```
 
 Each action prints one short line, for example `update: pulled 3 commit(s)`. The full list of messages and errors is in [Actions](actions.md).

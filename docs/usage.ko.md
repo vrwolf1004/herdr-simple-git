@@ -32,7 +32,7 @@ herdr plugin config-dir local.simple-git
 명령줄에서 실행하려면:
 
 ```sh
-herdr plugin action invoke local.simple-git.update
+herdr plugin action invoke update --plugin local.simple-git
 ```
 
 각 액션은 한 줄의 짧은 결과를 보여 줍니다. 예: `update: pulled 3 commit(s)`. 메시지와 오류 전체 목록은 [액션](actions.md)에 있습니다.

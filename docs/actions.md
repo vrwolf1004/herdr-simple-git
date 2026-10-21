@@ -12,7 +12,7 @@
 Full action IDs are `local.simple-git.<action>`, for example `local.simple-git.update`. Invoke one from the command line with:
 
 ```sh
-herdr plugin action invoke local.simple-git.update
+herdr plugin action invoke update --plugin local.simple-git
 ```
 
 ## Output

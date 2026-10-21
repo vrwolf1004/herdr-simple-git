@@ -31,10 +31,10 @@ Type the folder path in the pane and press Enter. The path is saved to `config.j
 ## Start and stop
 
 ```sh
-herdr plugin action invoke local.simple-git.dock-start-windows   # Windows
-herdr plugin action invoke local.simple-git.dock-start           # Linux, macOS
-herdr plugin action invoke local.simple-git.dock-stop-windows    # Windows
-herdr plugin action invoke local.simple-git.dock-stop            # Linux, macOS
+herdr plugin action invoke dock-start-windows --plugin local.simple-git   # Windows
+herdr plugin action invoke dock-start --plugin local.simple-git           # Linux, macOS
+herdr plugin action invoke dock-stop-windows --plugin local.simple-git    # Windows
+herdr plugin action invoke dock-stop --plugin local.simple-git            # Linux, macOS
 ```
 
 - `dock-start` creates the `herdr-dock` workspace if it does not exist. It reuses an empty pane there. Otherwise it splits the dock into a 2×2 grid and takes the next free corner (top-left, top-right, bottom-left, bottom-right), the same rule as herdr-ai-feedbag and herdr-radio.
