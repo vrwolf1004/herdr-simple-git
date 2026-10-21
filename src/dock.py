@@ -84,8 +84,12 @@ def read_state(name):
 
 
 def write_state(name, value):
+    # 임시 파일에 쓰고 바꿔 끼운다. 중간에 멈춰도 읽는 쪽은 예전 값이나 새 값 중 하나만 본다.
     state_dir().mkdir(parents=True, exist_ok=True)
-    (state_dir() / name).write_text(value, encoding="utf-8")
+    target = state_dir() / name
+    temp = target.with_name(target.name + ".tmp")
+    temp.write_text(value, encoding="utf-8")
+    os.replace(temp, target)
 
 
 def remove_state(name):
