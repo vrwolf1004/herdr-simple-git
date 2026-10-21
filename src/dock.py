@@ -469,6 +469,8 @@ def main(argv=None):
     except (herdr_api.HerdrError, OSError, ValueError) as error:
         print(error, file=sys.stderr)
         return 1
+    except KeyboardInterrupt:
+        return 0  # Ctrl+C 로 멈춘 것이므로 트레이스백 없이 끝낸다
 
 
 if __name__ == "__main__":

@@ -39,6 +39,7 @@ herdr plugin action invoke local.simple-git.dock-stop            # Linux, macOS
 
 - `dock-start` creates the `herdr-dock` workspace if it does not exist. It reuses an empty pane there. Otherwise it splits the dock into a 2×2 grid and takes the next free corner (top-left, top-right, bottom-left, bottom-right), the same rule as herdr-ai-feedbag and herdr-radio.
 - `dock-stop` releases the agent and closes its pane. The workspace is closed only if nothing else is left in it.
+- Pressing Ctrl+C in the dock pane stops the host cleanly without a traceback, but leaves the pane open at its shell prompt. Use `dock-stop` to release the agent and close the pane.
 - Starting twice is safe. A running host is detected through its heartbeat.
 
 ## How it works

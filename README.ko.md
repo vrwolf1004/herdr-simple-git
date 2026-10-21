@@ -58,6 +58,7 @@ Windows에서 dock 액션 id 뒤에는 `-windows`를 붙입니다. 예를 들어
 | `dock-stop` | 항목을 빼고 pane을 닫습니다 (다른 것이 남아 있지 않을 때만 workspace를 닫습니다) |
 
 항목 상태는 저장소를 따릅니다. 저장소를 읽을 수 없으면 `blocked`, 커밋하지 않았거나 푸시하지 않은 변경이 있으면 `working`, 모두 깨끗하면 `idle`입니다. [Dock 에이전트](docs/dock.md)를 보세요.
+Dock pane에서 Ctrl+C를 누르면 traceback 없이 host가 종료되지만 pane은 닫히지 않습니다. 항목을 제거하고 pane을 닫으려면 `dock-stop`을 실행하세요.
 
 ## 언어
 

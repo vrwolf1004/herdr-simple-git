@@ -58,6 +58,7 @@ On Windows, append `-windows` to the dock action ids (`dock-start-windows`, `doc
 | `dock-stop` | Removes the entry and closes its pane (the workspace closes only if nothing else is left in it) |
 
 The entry's state follows the repos: `blocked` if a repo cannot be read, `working` if a repo has uncommitted or unpushed changes, and `idle` when every repo is clean. See [Dock agent](docs/dock.md).
+Pressing Ctrl+C in the dock pane stops its host cleanly without closing the pane; use `dock-stop` to remove the entry and close the pane.
 
 ## Language
 
