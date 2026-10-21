@@ -29,7 +29,7 @@ Dock pane:
 ╰─────────────────────────────────────────────────────────────╯
 ```
 
-The optional dock agent lists repositories directly under a folder and shows local changes and commits ahead of each branch's locally recorded upstream state. It does not fetch.
+The optional dock agent lists repositories directly under a folder and shows local changes and commits ahead of each branch's locally recorded upstream state. It does not fetch. Starting it checks for its existing pane and reuses it when available; otherwise it reuses an empty dock pane or creates one. Repository scans run in the background, and `git status --porcelain=v1 -b -z` is parsed safely for paths that contain spaces, quotes, or newlines.
 
 ## Installation
 
@@ -48,6 +48,7 @@ herdr plugin install vrwolf1004/herdr-simple-git
 | `dock-start` / `dock-stop` | Show or hide the repository dock agent |
 
 Append `-windows` to the dock action IDs on Windows. Configure the repository before running Git actions. The current branch needs an upstream for `update`; see the [usage guide](docs/usage.md).
+If `push` finds no upstream, it prints a `git push -u origin <branch>` setup command and does not push.
 
 ## Requirements
 
@@ -62,6 +63,7 @@ Append `-windows` to the dock action IDs on Windows. Configure the repository be
 - [사용법 (한국어)](docs/usage.ko.md)
 - [Setup](docs/setup.md)
 - [Actions](docs/actions.md)
+- [Architecture](docs/architecture.md)
 - [Dock agent](docs/dock.md)
 - [Troubleshooting](docs/troubleshooting.md)
 - [Development](docs/development.md)

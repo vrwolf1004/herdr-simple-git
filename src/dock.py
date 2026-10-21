@@ -483,8 +483,15 @@ def cmd_host(args):
     return 0
 
 
+def pane_alive(pane_id):
+    """pane 이 아직 herdr 에 있는지. 닫힌 pane 의 heartbeat 가 몇 초 남아 있어도 블록은 다시 띄워야 한다."""
+    if not pane_id:
+        return False
+    return herdr_api.cli("pane", "get", pane_id, check=False) is not None
+
+
 def cmd_start(_args):
-    if recently("heartbeat") or recently("starting"):
+    if (recently("heartbeat") and pane_alive(read_state("pane.id"))) or recently("starting"):
         return 0
     write_state("starting", str(time.time()))
     _, pane_id = ensure_workspace()

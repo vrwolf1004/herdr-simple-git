@@ -37,7 +37,7 @@ herdr plugin action invoke dock-stop-windows --plugin local.simple-git    # Wind
 herdr plugin action invoke dock-stop --plugin local.simple-git            # Linux, macOS
 ```
 
-- `dock-start` creates the `herdr-dock` workspace if it does not exist. It reuses an empty pane there. Otherwise it splits the dock into a 2×2 grid and takes the next free corner (top-left, top-right, bottom-left, bottom-right), the same rule as herdr-ai-feedbag and herdr-radio.
+- `dock-start` checks the saved pane ID and reuses that pane if it is still in the dock workspace. If not, it reuses an empty pane; if none is available, it splits an existing pane into a 2×2 grid and takes the next free corner (top-left, top-right, bottom-left, bottom-right). It creates the `herdr-dock` workspace when needed.
 - `dock-stop` releases the agent and closes its pane. The workspace is closed only if nothing else is left in it.
 - Pressing Ctrl+C in the dock pane stops the host cleanly without a traceback, but leaves the pane open at its shell prompt. Use `dock-stop` to release the agent and close the pane.
 - Starting twice is safe. A running host is detected through its heartbeat.
@@ -45,7 +45,7 @@ herdr plugin action invoke dock-stop --plugin local.simple-git            # Linu
 ## How it works
 
 - The host loop runs inside the dock pane. Closing the pane stops it.
-- Each scan runs `git status --porcelain=v1 -b` for every repo (with a 10-second timeout per repo). Scanning runs in a background thread so it does not block pane input. There is no fetch or network access; `ahead` is based on the locally recorded upstream state, typically from the last fetch.
+- Each scan runs `git status --porcelain=v1 -b -z` for every repo (with a 10-second timeout per repo). The shared status parser handles NUL-delimited paths, including paths with spaces, quotes, or newlines, and skips the extra old-path token used for renames and copies. Scanning runs in a background thread so it does not block pane input. There is no fetch or network access; `ahead` is based on the locally recorded upstream state, typically from the last fetch.
 - Every third refresh, the workspace is moved to the bottom of the list, as herdr-timekit does.
 - The host reads the state, config, and language paths from `start`, because the pane does not get the `HERDR_PLUGIN_*` variables.
 

@@ -19,3 +19,8 @@
   - 현재 dock은 변경 사항과 push 대기만 표시하며 원격보다 뒤처진 커밋은 보여 주지 않는다. 기본 네트워크 비접속 동작을 유지하면서 선택적 fetch 또는 마지막 fetch 기준 표시를 검토한다.
 - [x] **upstream 없는 저장소의 push 안내** (upstream 이 없으면 `git push -u origin <브랜치>` 안내, detached HEAD 는 따로 안내)
   - `push`가 먼저 `@{u}`를 조회하므로 upstream이 설정되지 않은 저장소에서는 사용자가 다음에 할 일을 알기 어려울 수 있다. 상황을 구분해 원격/브랜치 설정 안내를 제공하고 테스트한다.
+
+## 실행 확인에서 찾은 개선점 (2026-10-21)
+
+- [x] **dock start 가 heartbeat 만 보고 일찍 끝남** (pane 존재 확인 추가. `PaneAliveTest`) (`cmd_start`, `recently("heartbeat")`): radio 와 같은 문제다. pane 존재 확인을 추가한다.
+- [ ] **저장소 스캔 진행 표시**: 백그라운드 스캔은 끝났지만 스캔 중임을 보여 주지 않는다.

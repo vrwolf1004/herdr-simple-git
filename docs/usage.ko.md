@@ -41,7 +41,7 @@ herdr plugin action invoke update --plugin local.simple-git
 
 ## 4. Dock 에이전트
 
-플러그인은 `herdr-dock` workspace에 `N repos` 항목도 하나 추가합니다. 폴더 아래의 git 저장소 목록과 각 저장소의 상태를 보여 줍니다. [Dock 에이전트](dock.md)를 보세요.
+플러그인은 `herdr-dock` workspace에 `N repos` 항목도 하나 추가합니다. 폴더 아래의 git 저장소 목록과 각 저장소의 상태를 보여 줍니다. 시작 시 기존 pane을 확인해 재사용하고 저장소 스캔은 백그라운드에서 실행합니다. pane 선택과 상태 파싱은 [Dock 에이전트](dock.md)를 보세요.
 
 ## 5. 언어
 

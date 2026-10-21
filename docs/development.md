@@ -20,6 +20,10 @@ herdr-simple-git/
 
 `herdr-plugin.toml` maps each action to `python -X utf8 src/index.py <action>`. The script takes the action name as its only argument. `-X utf8` makes Korean and other non-ASCII output work on Windows consoles.
 
+## Dock and status parsing
+
+The dock host is started in a pane by `src/dock.py start`. It checks whether the saved pane still exists and reuses it; otherwise it selects an empty pane or creates one by splitting an existing pane. `RepoScanner` performs repository discovery and status reads on a daemon background thread, leaving the pane's input loop responsive. Each repository status comes from `git status --porcelain=v1 -b -z`; `src/gitstatus.py` parses the branch header and NUL-delimited status entries, including rename/copy records. The push action checks for an upstream before pushing and prints the `git push -u origin <branch>` command when one is missing.
+
 ## Translations
 
 All user-facing text is in `src/locales/<language>.json`. Code calls `t('key', { name: value })`, and `{name}` in the text is replaced with the value.

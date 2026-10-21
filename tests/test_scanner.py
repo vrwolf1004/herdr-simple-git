@@ -12,6 +12,21 @@ os.environ.setdefault("HERDR_SIMPLE_GIT_LANG", "en")
 import dock  # noqa: E402
 
 
+class PaneAliveTest(unittest.TestCase):
+    def test_missing_pane_is_not_alive(self):
+        from unittest import mock
+        with mock.patch.object(dock.herdr_api, "cli", return_value=None):
+            self.assertFalse(dock.pane_alive("wN:p1"))
+
+    def test_existing_pane_is_alive(self):
+        from unittest import mock
+        with mock.patch.object(dock.herdr_api, "cli", return_value={"pane": {"pane_id": "wN:p1"}}):
+            self.assertTrue(dock.pane_alive("wN:p1"))
+
+    def test_no_pane_id_is_not_alive(self):
+        self.assertFalse(dock.pane_alive(None))
+
+
 class RepoScannerTest(unittest.TestCase):
     def wait_for(self, scanner, folder, timeout=3.0):
         deadline = time.monotonic() + timeout

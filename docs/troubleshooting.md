@@ -4,7 +4,7 @@ Common problems and where to look.
 
 - **`repo.txt` error:** the file is missing or empty. Create it with the repository path. See [Setup: Configure](setup.md#configure).
 - **git failure:** the message says which git command failed and shows git's stderr. Check the repository path and, for `update`, that the upstream is set. See [Setup: Git prerequisites](setup.md#git-prerequisites-for-the-repository).
-- **`push` says the branch has no upstream:** follow the printed `git push -u origin <branch>` guidance, then retry.
+- **`push` says the branch has no upstream:** the action prints `git push -u origin <branch>` guidance and does not push. Run that command to set the upstream, then retry.
 - **`Unknown action: <name>`:** the manifest and `src/index.py` are out of sync. See [Actions: Errors](actions.md#errors).
 - **No visible output:** herdr's UI for plugin output is not documented. Read the log instead:
 

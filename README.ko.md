@@ -30,6 +30,7 @@ Dock pane:
 ```
 
 선택 기능인 dock 에이전트는 지정한 폴더 바로 아래의 저장소와 로컬 변경사항, 로컬에 기록된 upstream보다 앞선 커밋을 보여 줍니다. 원격에서 fetch하지는 않습니다.
+Dock을 시작할 때 기존 pane을 확인해 재사용하고, 사용할 수 없으면 빈 pane을 고르거나 새 pane을 만듭니다. 저장소 스캔은 백그라운드에서 수행하며 `git status --porcelain=v1 -b -z`를 파싱해 공백·따옴표·줄바꿈이 든 경로도 처리합니다.
 
 ## 설치
 
@@ -48,6 +49,7 @@ herdr plugin install vrwolf1004/herdr-simple-git
 | `dock-start` / `dock-stop` | 저장소 dock 에이전트 표시 또는 숨기기 |
 
 Windows에서는 dock 액션 ID 뒤에 `-windows`를 붙입니다. Git 액션 전에 저장소 경로를 설정하세요. `update`에는 현재 브랜치의 upstream이 필요합니다. 자세한 방법은 [사용법](docs/usage.ko.md)을 참고하세요.
+`push` 대상 브랜치에 upstream이 없으면 `git push -u origin <branch>` 설정 명령을 안내하고 push하지 않습니다.
 
 ## 요구 사항
 
@@ -62,6 +64,7 @@ Windows에서는 dock 액션 ID 뒤에 `-windows`를 붙입니다. Git 액션 �
 - [Usage (English)](docs/usage.md)
 - [설정](docs/setup.md)
 - [액션](docs/actions.md)
+- [구조](docs/architecture.md)
 - [Dock 에이전트](docs/dock.md)
 - [문제 해결](docs/troubleshooting.md)
 - [개발](docs/development.md)
