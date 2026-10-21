@@ -42,6 +42,9 @@ from i18n import language, t  # noqa: E402
 
 SOURCE = "plugin:local.simple-git"
 DOCK_LABEL = "herdr-dock"
+# 도크 블록이 3개일 때 빈 4번째 칸에 띄우는 소개 pane 의 이름 (정의는 intro.py 에 있다)
+INTRO_LABEL = "herdr-dock-intro"
+INTRO_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "intro.py")
 AGENT_ID = "git"
 TICK_SECONDS = 5
 INPUT_POLL_SECONDS = 0.5
@@ -301,6 +304,28 @@ def grid_split(anchor, cwd):
     return split["pane"]["pane_id"]
 
 
+def unlabel_intro(panes):
+    """소개 칸은 빈 칸으로 본다. 실제로 블록이 쓸 때만 이름을 지운다."""
+    return [dict(p, label=None) if p.get("label") == INTRO_LABEL else p for p in panes]
+
+
+def ensure_intro(workspace_id, new_pane, cwd):
+    """도크 블록이 3개이고 소개 칸이 없으면 빈 4번째 칸에 소개 문구를 띄운다. 이미 있으면 아무것도 하지 않는다."""
+    agent_panes = {a["pane_id"] for a in herdr_api.cli("agent", "list").get("agents", [])}
+    panes = [p for p in workspace_panes(workspace_id) if not is_sidebar(p)]
+    if any(p.get("label") == INTRO_LABEL for p in panes):
+        return
+    blocks = [p for p in panes if p["pane_id"] in agent_panes or p["pane_id"] == new_pane]
+    if len(blocks) != 3:
+        return
+    if any(not p.get("label") and not p.get("tokens") and p["pane_id"] not in agent_panes and p["pane_id"] != new_pane
+           for p in panes):
+        return  # 빈 칸이 이미 있으면 그 칸은 나중 블록이 쓴다
+    pane_id = grid_split(blocks[0]["pane_id"], cwd)
+    herdr_api.cli("pane", "rename", pane_id, INTRO_LABEL)
+    herdr_api.cli("pane", "run", pane_id, sys.executable, "-X", "utf8", INTRO_SCRIPT)
+
+
 def ensure_workspace():
     """dock workspace 와 이 plugin 이 쓸 pane 을 확보한다. 다른 plugin 의 pane 은 건드리지 않는다."""
     workspaces = herdr_api.cli("workspace", "list").get("workspaces", [])
@@ -319,7 +344,7 @@ def ensure_workspace():
         pane_id = stored
     else:
         agent_panes = {a["pane_id"] for a in herdr_api.cli("agent", "list").get("agents", [])}
-        free = [p["pane_id"] for p in panes
+        free = [p["pane_id"] for p in unlabel_intro(panes)
                 if not p.get("label") and not p.get("tokens") and p["pane_id"] not in agent_panes]
         if free:
             pane_id = free[0]
@@ -328,7 +353,10 @@ def ensure_workspace():
             if anchor is None:
                 raise herdr_api.HerdrError(f"workspace {workspace_id} has no pane")
             pane_id = grid_split(anchor, str(state_dir()))
+    if any(p["pane_id"] == pane_id and p.get("label") == INTRO_LABEL for p in panes):
+        herdr_api.cli("pane", "rename", pane_id, "--clear")  # 소개 칸을 블록이 쓰므로 이름을 지운다
     write_state("pane.id", pane_id)
+    ensure_intro(workspace_id, pane_id, str(state_dir()))
     return workspace_id, pane_id
 
 
