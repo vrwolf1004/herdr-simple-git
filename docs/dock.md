@@ -37,8 +37,10 @@ herdr plugin action invoke dock-stop-windows --plugin local.simple-git    # Wind
 herdr plugin action invoke dock-stop --plugin local.simple-git            # Linux, macOS
 ```
 
-- `dock-start` checks the saved pane ID and reuses that pane if it is still in the dock workspace. If not, it reuses an empty pane; if none is available, it splits an existing pane into a 2×2 grid and takes the next free corner (top-left, top-right, bottom-left, bottom-right). It creates the `herdr-dock` workspace when needed.
-- `dock-stop` releases the agent and closes its pane. The workspace is closed only if nothing else is left in it.
+- `dock-start` asks `herdr-dock-grid` for its pane with `ensure_dock_pane("herdr-simple-git")`. It reuses the pane it already holds; otherwise it takes an empty pane or splits the 2×2 grid. The `herdr-dock` workspace is created when needed, and `herdr-dock2` and later are used when the grid is full.
+- `dock-stop` releases the agent, closes its pane, and calls `release_dock_pane`. The workspace is closed only if nothing else is left in it.
+
+> `herdr-dock-grid` link is optional. Without it, the plugin uses its own `src/dock_layout.py` copy and works the same way.
 - Pressing Ctrl+C in the dock pane stops the host cleanly without a traceback, but leaves the pane open at its shell prompt. Use `dock-stop` to release the agent and close the pane.
 - Starting twice is safe. A running host is detected through its heartbeat.
 

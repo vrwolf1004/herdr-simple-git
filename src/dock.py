@@ -25,6 +25,18 @@ import unicodedata
 from pathlib import Path
 
 import herdr_api
+
+
+def load_dock_layout():
+    """설치된 herdr-dock-grid 가 있으면 그 원본을, 없으면 이 plugin 의 복사본(src/dock_layout.py)을 쓴다."""
+    grid = herdr_api.installed_plugin_path("herdr-dock-grid")
+    if grid:
+        sys.path.insert(0, os.path.join(grid, "src"))
+    import dock_layout
+    return dock_layout
+
+
+dock = load_dock_layout()
 from gitstatus import ahead_count, parse_branch, parse_status_z
 
 
@@ -276,36 +288,6 @@ def workspace_panes(workspace_id):
     return [p for p in panes if p["workspace_id"] == workspace_id]
 
 
-def grid_split(anchor, cwd):
-    """dock 을 2x2 로 나눈다. 자리는 왼쪽 위, 오른쪽 위, 왼쪽 아래, 오른쪽 아래 순서이고, 빈 자리는 빈 채로 둔다.
-    anchor 로 갈 수 없는 자리는 건너뛴다. 나눌 자리가 없으면 anchor 아래로 나눈다."""
-    layout = herdr_api.cli("pane", "layout", "--pane", anchor)["layout"]
-    area = layout["area"]
-    corners = {}
-    for pane in layout["panes"]:
-        rect = pane["rect"]
-        corners[(0 if rect["x"] <= area["x"] else 1, 0 if rect["y"] <= area["y"] else 1)] = pane["pane_id"]
-    top_left, top_right = corners.get((0, 0)), corners.get((1, 0))
-    bottom_left, bottom_right = corners.get((0, 1)), corners.get((1, 1))
-    if top_left and not top_right:
-        target, direction = top_left, "right"
-    elif top_left and not bottom_left:
-        target, direction = top_left, "down"
-    elif top_right and not bottom_right:
-        target, direction = top_right, "down"
-    elif bottom_left and not bottom_right:
-        target, direction = bottom_left, "right"
-    else:
-        target, direction = anchor, "down"
-    split = herdr_api.cli("pane", "split", target, "--direction", direction, "--cwd", cwd)
-    return split["pane"]["pane_id"]
-
-
-def unlabel_intro(panes):
-    """소개 칸은 빈 칸으로 본다. 실제로 블록이 쓸 때만 이름을 지운다."""
-    return [dict(p, label=None) if p.get("label") == INTRO_LABEL else p for p in panes]
-
-
 def ensure_intro(workspace_id, new_pane, cwd):
     """도크 블록이 3개이고 소개 칸이 없으면 빈 4번째 칸에 소개 문구를 띄운다. 이미 있으면 아무것도 하지 않는다."""
     agent_panes = {a["pane_id"] for a in herdr_api.cli("agent", "list").get("agents", [])}
@@ -318,109 +300,24 @@ def ensure_intro(workspace_id, new_pane, cwd):
     if any(not p.get("label") and not p.get("tokens") and p["pane_id"] not in agent_panes and p["pane_id"] != new_pane
            for p in panes):
         return  # 빈 칸이 이미 있으면 그 칸은 나중 블록이 쓴다
-    pane_id = grid_split(blocks[0]["pane_id"], cwd)
+    pane_id = dock.grid_split(blocks[0]["pane_id"], cwd)
     herdr_api.cli("pane", "rename", pane_id, INTRO_LABEL)
     herdr_api.cli("pane", "run", pane_id, sys.executable, "-X", "utf8", INTRO_SCRIPT)
 
 
 DOCK_KEY = "herdr-simple-git"
-DOCK_ORDER = ("herdr-simple-git", "herdr-timekit")  # 알파벳순. 앞선 plugin 이 자리를 잡는 동안 뒤 plugin 은 기다린다
-DOCK_WAIT_SECONDS = 5
-DOCK_MARKER_STALE_SECONDS = 10
-
-
 def plugins_folder():
     return os.path.dirname(os.path.abspath(state_dir()))
 
 
-def dock_marker(folder, key):
-    return os.path.join(folder, f"{key}.dock")
-
-
-def write_dock_marker(folder, key, pane_id):
-    """plugins 폴더에 자리 표시를 남긴다. pane_id 가 비어 있으면 자리를 잡는 중이라는 뜻이다."""
-    with open(dock_marker(folder, key), "w", encoding="utf-8") as f:
-        f.write(pane_id or "")
-
-
-def remove_dock_marker(folder, key):
-    try:
-        os.remove(dock_marker(folder, key))
-    except OSError:
-        pass
-
-
-def dock_starting(folder, key):
-    path = dock_marker(folder, key)
-    try:
-        with open(path, encoding="utf-8") as f:
-            if f.read().strip():
-                return False
-        return time.time() - os.path.getmtime(path) < DOCK_MARKER_STALE_SECONDS
-    except OSError:
-        return False
-
-
-def wait_for_earlier(folder, own):
-    """알파벳상 앞선 dock plugin 이 자리를 잡는 중이면 잠깐 기다린다. 오래된 표시는 죽은 것으로 보고 무시한다."""
-    earlier = DOCK_ORDER[:DOCK_ORDER.index(own)]
-    deadline = time.time() + DOCK_WAIT_SECONDS
-    while any(dock_starting(folder, key) for key in earlier) and time.time() < deadline:
-        time.sleep(0.2)
-
-
-def claimed_dock_panes(folder, own):
-    """다른 dock plugin 이 표시해 둔 pane. 그 pane 은 건드리지 않는다."""
-    claimed = set()
-    for key in DOCK_ORDER:
-        if key == own:
-            continue
-        try:
-            with open(dock_marker(folder, key), encoding="utf-8") as f:
-                pane_id = f.read().strip()
-        except OSError:
-            continue
-        if pane_id:
-            claimed.add(pane_id)
-    return claimed
-
-
 def ensure_workspace():
-    """dock workspace 와 이 plugin 이 쓸 pane 을 확보한다. 다른 plugin 의 pane 은 건드리지 않는다."""
-    folder = plugins_folder()
-    wait_for_earlier(folder, DOCK_KEY)
-    write_dock_marker(folder, DOCK_KEY, "")
-    workspaces = herdr_api.cli("workspace", "list").get("workspaces", [])
-    workspace_id = next((w["workspace_id"] for w in workspaces if w.get("label") == DOCK_LABEL), None)
-    if workspace_id is None:
-        # cwd 는 git 저장소가 아닌 state dir 로 둬서 사이드바 branch 표시가 비게 한다.
-        created = herdr_api.cli("workspace", "create", "--label", DOCK_LABEL, "--cwd", str(state_dir()), "--no-focus")
-        workspace_id = created["workspace"]["workspace_id"]
-        remove_state("pane.id")
+    """dock workspace 와 이 plugin 이 쓸 pane 을 확보한다. 자리 배정과 정리는 herdr-dock-grid 공용 모듈이 한다."""
+    workspace_id, pane_id = dock.ensure_dock_pane(DOCK_KEY, str(state_dir()))
     write_state("workspace.id", workspace_id)
-
     panes = workspace_panes(workspace_id)
-    ids = [p["pane_id"] for p in panes]
-    stored = read_state("pane.id")
-    if stored in ids:
-        pane_id = stored
-    else:
-        agent_panes = {a["pane_id"] for a in herdr_api.cli("agent", "list").get("agents", [])}
-        claimed = claimed_dock_panes(folder, DOCK_KEY)
-        free = [p["pane_id"] for p in unlabel_intro(panes)
-                if not p.get("label") and not p.get("tokens") and p["pane_id"] not in agent_panes
-                and p["pane_id"] not in claimed]
-        if free:
-            pane_id = free[0]
-        else:
-            anchor = next((p["pane_id"] for p in panes if not is_sidebar(p)), None)
-            if anchor is None:
-                raise herdr_api.HerdrError(f"workspace {workspace_id} has no pane")
-            pane_id = grid_split(anchor, str(state_dir()))
     if any(p["pane_id"] == pane_id and p.get("label") == INTRO_LABEL for p in panes):
         herdr_api.cli("pane", "rename", pane_id, "--clear")  # 소개 칸을 블록이 쓰므로 이름을 지운다
     write_state("pane.id", pane_id)
-    write_dock_marker(folder, DOCK_KEY, pane_id)
     ensure_intro(workspace_id, pane_id, str(state_dir()))
     return workspace_id, pane_id
 
@@ -586,7 +483,7 @@ def cmd_stop(_args):
             herdr_api.cli("workspace", "close", workspace_id, check=False)
     for name in ("pane.id", "workspace.id", "heartbeat", "starting"):
         remove_state(name)
-    remove_dock_marker(plugins_folder(), DOCK_KEY)
+    dock.release_dock_pane(DOCK_KEY)
     return 0
 
 

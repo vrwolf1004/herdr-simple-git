@@ -22,7 +22,7 @@ herdr-simple-git/
 
 ## Dock and status parsing
 
-The dock host is started in a pane by `src/dock.py start`. It checks whether the saved pane still exists and reuses it; otherwise it selects an empty pane or creates one by splitting an existing pane. `RepoScanner` performs repository discovery and status reads on a daemon background thread, leaving the pane's input loop responsive. Each repository status comes from `git status --porcelain=v1 -b -z`; `src/gitstatus.py` parses the branch header and NUL-delimited status entries, including rename/copy records. The push action checks for an upstream before pushing and prints the `git push -u origin <branch>` command when one is missing.
+The dock host is started in a pane by `src/dock.py start`. It gets its pane from `ensure_dock_pane` in `dock_layout.py` (the installed `herdr-dock-grid` if present, otherwise the local copy), and `dock-stop` releases it. `RepoScanner` performs repository discovery and status reads on a daemon background thread, leaving the pane's input loop responsive. Each repository status comes from `git status --porcelain=v1 -b -z`; `src/gitstatus.py` parses the branch header and NUL-delimited status entries, including rename/copy records. The push action checks for an upstream before pushing and prints the `git push -u origin <branch>` command when one is missing.
 
 ## Translations
 
