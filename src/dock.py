@@ -323,8 +323,73 @@ def ensure_intro(workspace_id, new_pane, cwd):
     herdr_api.cli("pane", "run", pane_id, sys.executable, "-X", "utf8", INTRO_SCRIPT)
 
 
+DOCK_KEY = "herdr-simple-git"
+DOCK_ORDER = ("herdr-simple-git", "herdr-timekit")  # 알파벳순. 앞선 plugin 이 자리를 잡는 동안 뒤 plugin 은 기다린다
+DOCK_WAIT_SECONDS = 5
+DOCK_MARKER_STALE_SECONDS = 10
+
+
+def plugins_folder():
+    return os.path.dirname(os.path.abspath(state_dir()))
+
+
+def dock_marker(folder, key):
+    return os.path.join(folder, f"{key}.dock")
+
+
+def write_dock_marker(folder, key, pane_id):
+    """plugins 폴더에 자리 표시를 남긴다. pane_id 가 비어 있으면 자리를 잡는 중이라는 뜻이다."""
+    with open(dock_marker(folder, key), "w", encoding="utf-8") as f:
+        f.write(pane_id or "")
+
+
+def remove_dock_marker(folder, key):
+    try:
+        os.remove(dock_marker(folder, key))
+    except OSError:
+        pass
+
+
+def dock_starting(folder, key):
+    path = dock_marker(folder, key)
+    try:
+        with open(path, encoding="utf-8") as f:
+            if f.read().strip():
+                return False
+        return time.time() - os.path.getmtime(path) < DOCK_MARKER_STALE_SECONDS
+    except OSError:
+        return False
+
+
+def wait_for_earlier(folder, own):
+    """알파벳상 앞선 dock plugin 이 자리를 잡는 중이면 잠깐 기다린다. 오래된 표시는 죽은 것으로 보고 무시한다."""
+    earlier = DOCK_ORDER[:DOCK_ORDER.index(own)]
+    deadline = time.time() + DOCK_WAIT_SECONDS
+    while any(dock_starting(folder, key) for key in earlier) and time.time() < deadline:
+        time.sleep(0.2)
+
+
+def claimed_dock_panes(folder, own):
+    """다른 dock plugin 이 표시해 둔 pane. 그 pane 은 건드리지 않는다."""
+    claimed = set()
+    for key in DOCK_ORDER:
+        if key == own:
+            continue
+        try:
+            with open(dock_marker(folder, key), encoding="utf-8") as f:
+                pane_id = f.read().strip()
+        except OSError:
+            continue
+        if pane_id:
+            claimed.add(pane_id)
+    return claimed
+
+
 def ensure_workspace():
     """dock workspace 와 이 plugin 이 쓸 pane 을 확보한다. 다른 plugin 의 pane 은 건드리지 않는다."""
+    folder = plugins_folder()
+    wait_for_earlier(folder, DOCK_KEY)
+    write_dock_marker(folder, DOCK_KEY, "")
     workspaces = herdr_api.cli("workspace", "list").get("workspaces", [])
     workspace_id = next((w["workspace_id"] for w in workspaces if w.get("label") == DOCK_LABEL), None)
     if workspace_id is None:
@@ -341,8 +406,10 @@ def ensure_workspace():
         pane_id = stored
     else:
         agent_panes = {a["pane_id"] for a in herdr_api.cli("agent", "list").get("agents", [])}
+        claimed = claimed_dock_panes(folder, DOCK_KEY)
         free = [p["pane_id"] for p in unlabel_intro(panes)
-                if not p.get("label") and not p.get("tokens") and p["pane_id"] not in agent_panes]
+                if not p.get("label") and not p.get("tokens") and p["pane_id"] not in agent_panes
+                and p["pane_id"] not in claimed]
         if free:
             pane_id = free[0]
         else:
@@ -353,6 +420,7 @@ def ensure_workspace():
     if any(p["pane_id"] == pane_id and p.get("label") == INTRO_LABEL for p in panes):
         herdr_api.cli("pane", "rename", pane_id, "--clear")  # 소개 칸을 블록이 쓰므로 이름을 지운다
     write_state("pane.id", pane_id)
+    write_dock_marker(folder, DOCK_KEY, pane_id)
     ensure_intro(workspace_id, pane_id, str(state_dir()))
     return workspace_id, pane_id
 
@@ -518,6 +586,7 @@ def cmd_stop(_args):
             herdr_api.cli("workspace", "close", workspace_id, check=False)
     for name in ("pane.id", "workspace.id", "heartbeat", "starting"):
         remove_state(name)
+    remove_dock_marker(plugins_folder(), DOCK_KEY)
     return 0
 
 
