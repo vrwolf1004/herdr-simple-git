@@ -9,7 +9,7 @@ Common problems and where to look.
 - **No visible output:** herdr's UI for plugin output is not documented. Read the log instead:
 
   ```sh
-  herdr plugin log list --plugin local.simple-git
+  herdr plugin log list --plugin herdr-simple-git
   ```
 
 - **`update` fails after the branches diverged:** `update` uses `--ff-only`, so it stops without changing anything. Merge or rebase by hand, then run it again. See [Actions: Behavior notes](actions.md#behavior-notes).

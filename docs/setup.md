@@ -19,13 +19,13 @@ herdr plugin link "C:\path\to\herdr-simple-git"
 Confirm the actions are registered:
 
 ```sh
-herdr plugin action list --plugin local.simple-git
+herdr plugin action list --plugin herdr-simple-git
 ```
 
 To remove the link later (this does not delete any files):
 
 ```sh
-herdr plugin unlink local.simple-git
+herdr plugin unlink herdr-simple-git
 ```
 
 ## Configure
@@ -33,13 +33,13 @@ herdr plugin unlink local.simple-git
 The plugin reads its settings from herdr's per-plugin config directory. Find the path with:
 
 ```sh
-herdr plugin config-dir local.simple-git
+herdr plugin config-dir herdr-simple-git
 ```
 
 On Windows this is usually:
 
 ```
-C:\Users\<you>\AppData\Roaming\herdr\plugins\config\local.simple-git
+C:\Users\<you>\AppData\Roaming\herdr\plugins\config\herdr-simple-git
 ```
 
 Create these files in that folder:
@@ -83,7 +83,7 @@ Bind an action to a key in `~/.config/herdr/config.toml`:
 [[keys.command]]
 key = "prefix+g"
 type = "plugin_action"
-command = "local.simple-git.all"
+command = "herdr-simple-git.all"
 description = "git update, commit, push"
 ```
 

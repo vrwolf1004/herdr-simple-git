@@ -37,10 +37,10 @@ Type the folder path in the pane and press Enter. The path is saved to `config.j
 ## Start and stop
 
 ```sh
-herdr plugin action invoke dock-start-windows --plugin local.simple-git   # Windows
-herdr plugin action invoke dock-start --plugin local.simple-git           # Linux, macOS
-herdr plugin action invoke dock-stop-windows --plugin local.simple-git    # Windows
-herdr plugin action invoke dock-stop --plugin local.simple-git            # Linux, macOS
+herdr plugin action invoke dock-start-windows --plugin herdr-simple-git   # Windows
+herdr plugin action invoke dock-start --plugin herdr-simple-git           # Linux, macOS
+herdr plugin action invoke dock-stop-windows --plugin herdr-simple-git    # Windows
+herdr plugin action invoke dock-stop --plugin herdr-simple-git            # Linux, macOS
 ```
 
 - `dock-start` asks `herdr-dock-grid` for its pane with `ensure_dock_pane("herdr-simple-git")`. It reuses the pane it already holds; otherwise it takes an empty pane or splits the 2×2 grid. The `herdr-dock` workspace is created when needed, and `herdr-dock2` and later are used when the grid is full.

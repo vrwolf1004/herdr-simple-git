@@ -42,10 +42,10 @@ herdr plugin install vrwolf1004/herdr-simple-git
 
 | Action | What it does |
 | --- | --- |
-| `local.simple-git.update` | Run `git pull --ff-only` |
-| `local.simple-git.commit` | Stage all changes and commit |
-| `local.simple-git.push` | Run `git push` |
-| `local.simple-git.all` | Update, commit, then push; stop on the first failure |
+| `herdr-simple-git.update` | Run `git pull --ff-only` |
+| `herdr-simple-git.commit` | Stage all changes and commit |
+| `herdr-simple-git.push` | Run `git push` |
+| `herdr-simple-git.all` | Update, commit, then push; stop on the first failure |
 | `dock-start` / `dock-stop` | Show or hide the repository dock agent |
 
 Append `-windows` to the dock action IDs on Windows. Configure the repository before running Git actions. The current branch needs an upstream for `update`; see the [usage guide](docs/usage.md).

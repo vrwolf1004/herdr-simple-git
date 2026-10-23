@@ -43,10 +43,10 @@ herdr plugin install vrwolf1004/herdr-simple-git
 
 | 액션 | 기능 |
 | --- | --- |
-| `local.simple-git.update` | `git pull --ff-only` 실행 |
-| `local.simple-git.commit` | 변경사항을 모두 스테이징하고 커밋 |
-| `local.simple-git.push` | `git push` 실행 |
-| `local.simple-git.all` | 업데이트, 커밋, 푸시를 순서대로 실행하고 실패 시 중단 |
+| `herdr-simple-git.update` | `git pull --ff-only` 실행 |
+| `herdr-simple-git.commit` | 변경사항을 모두 스테이징하고 커밋 |
+| `herdr-simple-git.push` | `git push` 실행 |
+| `herdr-simple-git.all` | 업데이트, 커밋, 푸시를 순서대로 실행하고 실패 시 중단 |
 | `dock-start` / `dock-stop` | 저장소 dock 에이전트 표시 또는 숨기기 |
 
 Windows에서는 dock 액션 ID 뒤에 `-windows`를 붙입니다. Git 액션 전에 저장소 경로를 설정하세요. `update`에는 현재 브랜치의 upstream이 필요합니다. 자세한 방법은 [사용법](docs/usage.ko.md)을 참고하세요.

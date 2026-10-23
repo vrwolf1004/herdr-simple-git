@@ -53,7 +53,7 @@ _apply_flags_to_environment(sys.argv)
 
 from i18n import language, t  # noqa: E402
 
-SOURCE = "plugin:local.simple-git"
+SOURCE = "plugin:herdr-simple-git"
 DOCK_LABEL = "herdr-dock"
 # 도크 블록이 3개일 때 빈 4번째 칸에 띄우는 소개 pane 의 이름 (정의는 intro.py 에 있다)
 INTRO_LABEL = "herdr-dock-intro"

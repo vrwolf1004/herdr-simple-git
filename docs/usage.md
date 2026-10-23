@@ -15,7 +15,7 @@ For a local clone, link the folder instead. Requirements: herdr 0.9.0 or later, 
 Create `repo.txt` in the plugin's config folder with the absolute path of the repository to sync. Optionally add `commit-message.txt` (the commit message) and `config.json` (`"lang"`). The folder is shown by:
 
 ```sh
-herdr plugin config-dir local.simple-git
+herdr plugin config-dir herdr-simple-git
 ```
 
 The repository must already exist. `update` needs an upstream branch; `commit` does not. If `update` has no upstream, it does not pull and prints the `git push -u origin <branch>` command instead. If the repository has no commits, `update` does not pull and asks you to make a commit first. If `push` has no upstream, it prints setup guidance and does not push. Details are in [Setup: Configure](setup.md#configure) and [Setup: Git prerequisites](setup.md#git-prerequisites-for-the-repository).
@@ -24,15 +24,15 @@ The repository must already exist. `update` needs an upstream branch; `commit` d
 
 | Action ID | What it runs |
 | --- | --- |
-| `local.simple-git.update` | `git pull --ff-only` |
-| `local.simple-git.commit` | `git add -A`, then `git commit -m <message>` |
-| `local.simple-git.push` | `git push` |
-| `local.simple-git.all` | `update`, then `commit`, then `push`. Stops at the first failing step |
+| `herdr-simple-git.update` | `git pull --ff-only` |
+| `herdr-simple-git.commit` | `git add -A`, then `git commit -m <message>` |
+| `herdr-simple-git.push` | `git push` |
+| `herdr-simple-git.all` | `update`, then `commit`, then `push`. Stops at the first failing step |
 
 Invoke one from the command line:
 
 ```sh
-herdr plugin action invoke update --plugin local.simple-git
+herdr plugin action invoke update --plugin herdr-simple-git
 ```
 
 Each action prints one short line, for example `update (pull): pulled 3 commit(s)`. The full list of messages and errors is in [Actions](actions.md).

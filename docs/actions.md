@@ -9,10 +9,10 @@
 | `push` | Git push | `git push` |
 | `all` | Git update, commit, push | `update`, then `commit`, then `push` |
 
-Full action IDs are `local.simple-git.<action>`, for example `local.simple-git.update`. Invoke one from the command line with:
+Full action IDs are `herdr-simple-git.<action>`, for example `herdr-simple-git.update`. Invoke one from the command line with:
 
 ```sh
-herdr plugin action invoke update --plugin local.simple-git
+herdr plugin action invoke update --plugin herdr-simple-git
 ```
 
 ## Output

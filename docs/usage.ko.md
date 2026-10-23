@@ -15,7 +15,7 @@ herdr plugin install vrwolf1004/herdr-simple-git
 플러그인 설정 폴더에 `repo.txt`를 만들고 동기화할 저장소의 절대 경로를 씁니다. 필요하면 `commit-message.txt`(커밋 메시지)와 `config.json`(`"lang"`)도 만듭니다. 설정 폴더 위치는 다음 명령으로 확인합니다.
 
 ```sh
-herdr plugin config-dir local.simple-git
+herdr plugin config-dir herdr-simple-git
 ```
 
 저장소는 이미 있어야 합니다. `update`에는 upstream 브랜치가 필요하지만 `commit`에는 필요하지 않습니다. `update`에 upstream이 없으면 pull하지 않고 `git push -u origin <브랜치>` 명령을 안내합니다. 커밋이 하나도 없으면 pull하지 않고 먼저 커밋하라고 안내합니다. `push`에 upstream이 없으면 설정 방법을 출력하고 push하지 않습니다. 자세한 내용은 [설정: 설정 파일](setup.md#configure)과 [설정: Git 준비 사항](setup.md#git-prerequisites-for-the-repository)에 있습니다.
@@ -24,15 +24,15 @@ herdr plugin config-dir local.simple-git
 
 | 액션 id | 실행하는 명령 |
 | --- | --- |
-| `local.simple-git.update` | `git pull --ff-only` |
-| `local.simple-git.commit` | `git add -A` 후 `git commit -m <메시지>` |
-| `local.simple-git.push` | `git push` |
-| `local.simple-git.all` | `update`, `commit`, `push`를 차례로 실행. 실패한 단계에서 멈춤 |
+| `herdr-simple-git.update` | `git pull --ff-only` |
+| `herdr-simple-git.commit` | `git add -A` 후 `git commit -m <메시지>` |
+| `herdr-simple-git.push` | `git push` |
+| `herdr-simple-git.all` | `update`, `commit`, `push`를 차례로 실행. 실패한 단계에서 멈춤 |
 
 명령줄에서 실행하려면:
 
 ```sh
-herdr plugin action invoke update --plugin local.simple-git
+herdr plugin action invoke update --plugin herdr-simple-git
 ```
 
 각 액션은 한 줄의 짧은 결과를 보여 줍니다. 예: `업데이트(pull): 3개 커밋 받음` (영문 메시지는 `update (pull): pulled 3 commit(s)`). 메시지와 오류 전체 목록은 [액션](actions.md)에 있습니다.
