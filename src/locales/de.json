@@ -26,5 +26,10 @@
   "dock.update_need_number": "Zuerst eine Repo-Nummer eingeben",
   "dock.error": "Fehler",
   "push.no_upstream": "push: Branch '{branch}' hat kein upstream. Einrichten mit: git push -u origin {branch}",
-  "push.detached": "push: detached HEAD, nichts zu pushen"
+  "push.detached": "push: detached HEAD, nichts zu pushen",
+  "commit.staging_header": "Zu committende Dateien:",
+  "commit.sensitive_warning": "Warnung: Diese Dateien könnten Geheimnisse enthalten: {files} (Commit wird fortgesetzt)",
+  "update.no_upstream": "Update (pull): Branch '{branch}' hat kein upstream, nichts geholt. Einrichten mit: git push -u origin {branch}",
+  "update.detached": "Update (pull): detached HEAD, nichts zu holen",
+  "update.no_commits": "Update (pull): Das Repo hat noch keine Commits, nichts geholt. Bitte zuerst committen"
 }

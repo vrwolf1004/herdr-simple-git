@@ -12,7 +12,7 @@ herdr-simple-git/
   src/intro.py        shared dock introduction pane
   src/i18n.py         language detection and t() for translated messages
   src/locales/        one <language>.json per supported language
-  tests/              unittest coverage for status/branch parsing, repository actions, and scanning
+  tests/              unittest coverage for status/branch parsing, update input, and scanning
   docs/               documentation
   README.md           English README
   README.ko.md        Korean README

@@ -26,5 +26,10 @@
   "dock.update_need_number": "Saisissez d'abord un numéro de dépôt",
   "dock.error": "erreur",
   "push.no_upstream": "push : la branche '{branch}' n'a pas d'upstream. Définissez-le avec : git push -u origin {branch}",
-  "push.detached": "push : HEAD détaché, rien à pousser"
+  "push.detached": "push : HEAD détaché, rien à pousser",
+  "commit.staging_header": "Fichiers à commiter :",
+  "commit.sensitive_warning": "Attention : ces fichiers peuvent contenir des secrets : {files} (le commit continue)",
+  "update.no_upstream": "mise à jour (pull) : la branche '{branch}' n'a pas d'upstream, rien récupéré. Définissez-le avec : git push -u origin {branch}",
+  "update.detached": "mise à jour (pull) : HEAD détaché, rien à récupérer",
+  "update.no_commits": "mise à jour (pull) : le dépôt n'a pas encore de commit, rien récupéré. Faites d'abord un commit"
 }

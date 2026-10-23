@@ -26,5 +26,10 @@
   "dock.update_need_number": "Primero escribe el número del repo",
   "dock.error": "error",
   "push.no_upstream": "push: la rama '{branch}' no tiene upstream. Configúrelo con: git push -u origin {branch}",
-  "push.detached": "push: HEAD separado, nada que enviar"
+  "push.detached": "push: HEAD separado, nada que enviar",
+  "commit.staging_header": "Archivos que se van a confirmar:",
+  "commit.sensitive_warning": "Aviso: estos archivos pueden contener secretos: {files} (el commit continúa)",
+  "update.no_upstream": "actualización (pull): la rama '{branch}' no tiene upstream, no se recibió nada. Configúrelo con: git push -u origin {branch}",
+  "update.detached": "actualización (pull): HEAD separado, nada que recibir",
+  "update.no_commits": "actualización (pull): el repositorio aún no tiene commits, no se recibió nada. Haga primero un commit"
 }

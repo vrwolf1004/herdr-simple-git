@@ -18,7 +18,7 @@ Create `repo.txt` in the plugin's config folder with the absolute path of the re
 herdr plugin config-dir local.simple-git
 ```
 
-The repository must already exist. `update` needs an upstream branch; `commit` does not. If `push` has no upstream, it prints setup guidance and does not push. Details are in [Setup: Configure](setup.md#configure) and [Setup: Git prerequisites](setup.md#git-prerequisites-for-the-repository).
+The repository must already exist. `update` needs an upstream branch; `commit` does not. If `update` has no upstream, it does not pull and prints the `git push -u origin <branch>` command instead. If the repository has no commits, `update` does not pull and asks you to make a commit first. If `push` has no upstream, it prints setup guidance and does not push. Details are in [Setup: Configure](setup.md#configure) and [Setup: Git prerequisites](setup.md#git-prerequisites-for-the-repository).
 
 ## 3. Actions
 
@@ -35,7 +35,9 @@ Invoke one from the command line:
 herdr plugin action invoke update --plugin local.simple-git
 ```
 
-Each action prints one short line, for example `update: pulled 3 commit(s)`. The full list of messages and errors is in [Actions](actions.md).
+Each action prints one short line, for example `update (pull): pulled 3 commit(s)`. The full list of messages and errors is in [Actions](actions.md).
+
+`commit` shows the list of files before committing. If a file name looks sensitive, it prints a warning. The commit is not blocked.
 
 A keyboard shortcut for an action is shown in [Setup: Optional: keyboard shortcut](setup.md#optional-keyboard-shortcut).
 

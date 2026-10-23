@@ -26,5 +26,10 @@
   "dock.update_need_number": "先に番号を入力してください",
   "dock.error": "エラー",
   "push.no_upstream": "push: ブランチ '{branch}' に upstream がありません。git push -u origin {branch} で設定してください",
-  "push.detached": "push: detached HEAD のため push するブランチがありません"
+  "push.detached": "push: detached HEAD のため push するブランチがありません",
+  "commit.staging_header": "コミットするファイル:",
+  "commit.sensitive_warning": "警告: 機密情報を含む可能性のあるファイル: {files} (コミットは続行します)",
+  "update.no_upstream": "更新(pull): ブランチ '{branch}' に upstream がないため取得しませんでした。git push -u origin {branch} で設定してください",
+  "update.detached": "更新(pull): detached HEAD のため pull するブランチがありません",
+  "update.no_commits": "更新(pull): まだコミットがないため取得しませんでした。先にコミットしてください"
 }

@@ -26,5 +26,10 @@
   "dock.update_need_number": "Сначала введите номер репозитория",
   "dock.error": "ошибка",
   "push.no_upstream": "push: у ветки '{branch}' нет upstream. Задайте: git push -u origin {branch}",
-  "push.detached": "push: detached HEAD, пушить нечего"
+  "push.detached": "push: detached HEAD, пушить нечего",
+  "commit.staging_header": "Файлы для коммита:",
+  "commit.sensitive_warning": "Предупреждение: в файлах могут быть секреты: {files} (коммит продолжается)",
+  "update.no_upstream": "обновление (pull): у ветки '{branch}' нет upstream, ничего не получено. Задайте: git push -u origin {branch}",
+  "update.detached": "обновление (pull): detached HEAD, получать нечего",
+  "update.no_commits": "обновление (pull): в репозитории ещё нет коммитов, ничего не получено. Сначала сделайте коммит"
 }

@@ -26,5 +26,10 @@
   "dock.update_need_number": "먼저 번호를 입력하세요",
   "dock.error": "오류",
   "push.no_upstream": "push: '{branch}' 브랜치에 upstream 이 없습니다. `git push -u origin {branch}` 로 설정하세요",
-  "push.detached": "push: detached HEAD 상태라 push 할 브랜치가 없습니다"
+  "push.detached": "push: detached HEAD 상태라 push 할 브랜치가 없습니다",
+  "commit.staging_header": "커밋할 파일:",
+  "commit.sensitive_warning": "경고: 민감해 보이는 파일이 있습니다: {files} (커밋은 계속합니다)",
+  "update.no_upstream": "업데이트(pull): '{branch}' 브랜치에 upstream 이 없어 pull 하지 않았습니다. `git push -u origin {branch}` 로 설정하세요",
+  "update.detached": "업데이트(pull): detached HEAD 상태라 pull 할 브랜치가 없습니다",
+  "update.no_commits": "업데이트(pull): 아직 커밋이 없어 pull 하지 않았습니다. 먼저 커밋하세요"
 }

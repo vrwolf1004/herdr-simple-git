@@ -21,8 +21,8 @@ Each action prints one line on success. The text is translated (see [setup](setu
 
 | Action | Result | English message |
 | --- | --- | --- |
-| `update` | New commits pulled | `update: pulled N commit(s)` |
-| `update` | Already up to date | `update: already up to date` |
+| `update` | New commits pulled | `update (pull): pulled N commit(s)` |
+| `update` | Already up to date | `update (pull): already up to date` |
 | `commit` | Changes committed | `commit: committed N file(s) (<message>)` |
 | `commit` | Nothing to commit | `commit: nothing to commit` |
 | `push` | Commits pushed | `push: pushed N commit(s)` |
@@ -43,7 +43,10 @@ Git command failures print a message to stderr and exit with code 1. Common mess
 ## Behavior notes
 
 - `update` uses `--ff-only`, so it never creates a merge commit. If the local branch has diverged, `update` fails and nothing changes.
+- `update` checks for an upstream first. If there is none, it does not pull and prints the `git push -u origin <branch>` command instead.
+- `update` also checks for commits. If the repository has no commits yet, it does not pull and asks you to make a commit first.
 - `commit` stages everything with `git add -A`. Files matching `.gitignore` are skipped.
+- `commit` shows the list of files before committing. If a file name looks sensitive, it prints a warning. The commit is not blocked.
 - `commit` and `all` use `commit-message.txt` if it exists. Otherwise the message is `update` followed by the local time.
 - `push` checks how many commits are ahead of the upstream before pushing. If there are none, it does nothing.
 - A branch without an upstream prints the `git push -u origin <branch>` command to set one. A detached `HEAD` has no branch to push.

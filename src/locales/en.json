@@ -26,5 +26,10 @@
   "dock.update_need_number": "Enter a repo number first",
   "dock.error": "error",
   "push.no_upstream": "push: '{branch}' has no upstream. Set one with: git push -u origin {branch}",
-  "push.detached": "push: detached HEAD, nothing to push"
+  "push.detached": "push: detached HEAD, nothing to push",
+  "commit.staging_header": "files to be committed:",
+  "commit.sensitive_warning": "warning: these files may contain secrets: {files} (committing anyway)",
+  "update.no_upstream": "update (pull): '{branch}' has no upstream, nothing pulled. Set one with: git push -u origin {branch}",
+  "update.detached": "update (pull): detached HEAD, nothing to pull",
+  "update.no_commits": "update (pull): this repo has no commits yet, nothing pulled. Make a commit first"
 }

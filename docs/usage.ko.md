@@ -18,7 +18,7 @@ herdr plugin install vrwolf1004/herdr-simple-git
 herdr plugin config-dir local.simple-git
 ```
 
-저장소는 이미 있어야 합니다. `update`에는 upstream 브랜치가 필요하지만 `commit`에는 필요하지 않습니다. `push`에 upstream이 없으면 설정 방법을 출력하고 push하지 않습니다. 자세한 내용은 [설정: 설정 파일](setup.md#configure)과 [설정: Git 준비 사항](setup.md#git-prerequisites-for-the-repository)에 있습니다.
+저장소는 이미 있어야 합니다. `update`에는 upstream 브랜치가 필요하지만 `commit`에는 필요하지 않습니다. `update`에 upstream이 없으면 pull하지 않고 `git push -u origin <브랜치>` 명령을 안내합니다. 커밋이 하나도 없으면 pull하지 않고 먼저 커밋하라고 안내합니다. `push`에 upstream이 없으면 설정 방법을 출력하고 push하지 않습니다. 자세한 내용은 [설정: 설정 파일](setup.md#configure)과 [설정: Git 준비 사항](setup.md#git-prerequisites-for-the-repository)에 있습니다.
 
 ## 3. 액션
 
@@ -35,7 +35,9 @@ herdr plugin config-dir local.simple-git
 herdr plugin action invoke update --plugin local.simple-git
 ```
 
-각 액션은 한 줄의 짧은 결과를 보여 줍니다. 예: `update: pulled 3 commit(s)`. 메시지와 오류 전체 목록은 [액션](actions.md)에 있습니다.
+각 액션은 한 줄의 짧은 결과를 보여 줍니다. 예: `업데이트(pull): 3개 커밋 받음` (영문 메시지는 `update (pull): pulled 3 commit(s)`). 메시지와 오류 전체 목록은 [액션](actions.md)에 있습니다.
+
+`commit`은 커밋 전에 목록을 보여 줍니다. 민감해 보이는 파일 이름은 경고합니다. 커밋은 막지 않습니다.
 
 액션에 단축키를 연결하는 방법은 [설정: 단축키](setup.md#optional-keyboard-shortcut)에 있습니다.
 
