@@ -7,7 +7,7 @@ platforms = ["windows", "linux", "macos"]
 
 [[actions]]
 id = "update"
-title = "Git update (pull --ff-only)"
+title = "Git update (pull) (--ff-only)"
 contexts = ["workspace"]
 command = ["python", "-X", "utf8", "src/index.py", "update"]
 
@@ -25,7 +25,7 @@ command = ["python", "-X", "utf8", "src/index.py", "push"]
 
 [[actions]]
 id = "all"
-title = "Git update, commit, push"
+title = "Git update (pull), commit, push"
 contexts = ["workspace"]
 command = ["python", "-X", "utf8", "src/index.py", "all"]
 

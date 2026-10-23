@@ -47,3 +47,8 @@ def parse_branch(header):
 def ahead_count(header):
     match = re.search(r"ahead (\d+)", header)
     return int(match.group(1)) if match else 0
+
+
+def behind_count(header):
+    match = re.search(r"behind (\d+)", header)
+    return int(match.group(1)) if match else 0

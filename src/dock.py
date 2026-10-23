@@ -37,7 +37,7 @@ def load_dock_layout():
 
 
 dock = load_dock_layout()
-from gitstatus import ahead_count, parse_branch, parse_status_z
+from gitstatus import ahead_count, behind_count, parse_branch, parse_status_z
 
 
 def _apply_flags_to_environment(argv):
@@ -65,6 +65,7 @@ TOKEN_TTL_MS = 15_000
 LAYOUT_EVERY_TICKS = 3
 ALIVE_WITHIN_SECONDS = 15
 GIT_TIMEOUT_SECONDS = 10
+GIT_PULL_TIMEOUT_SECONDS = 120  # 원격 pull 은 네트워크를 타므로 상태 조회보다 길게 기다린다
 SCAN_MIN_SECONDS = 2  # 백그라운드 스캔은 이 간격보다 자주 하지 않는다
 CURSOR_HOME = "\x1b[H"
 PROMPT = "> "
@@ -148,7 +149,7 @@ def find_repos(folder):
 
 
 def repo_status(path):
-    status = {"name": os.path.basename(path), "branch": "", "changed": 0, "ahead": 0, "error": False}
+    status = {"name": os.path.basename(path), "branch": "", "changed": 0, "ahead": 0, "behind": 0, "error": False}
     try:
         result = subprocess.run(
             ["git", "-C", path, "status", "--porcelain=v1", "-b", "-z"],
@@ -168,6 +169,7 @@ def repo_status(path):
     if header:
         status["branch"] = parse_branch(header)
         status["ahead"] = ahead_count(header)
+        status["behind"] = behind_count(header)
     status["changed"] = len(parse_status_z(result.stdout))
     return status
 
@@ -224,17 +226,19 @@ def wrap(text, width):
     return lines
 
 
-def repo_line(repo):
+def repo_line(repo, number):
     if repo["error"]:
         detail = t("dock.error")
     else:
         parts = []
         if repo["changed"]:
             parts.append(t("dock.changed", count=repo["changed"]))
+        if repo["behind"]:
+            parts.append(t("dock.behind", count=repo["behind"]))
         if repo["ahead"]:
             parts.append(t("dock.ahead", count=repo["ahead"]))
         detail = ", ".join(parts) or t("dock.clean")
-    return f"{pad_to(repo['name'], 24)} {pad_to(repo['branch'], 14)} {detail}"
+    return f"{number:>2} {pad_to(repo['name'], 24)} {pad_to(repo['branch'], 14)} {detail}"
 
 
 def panel(title, sections):
@@ -256,15 +260,17 @@ def panel(title, sections):
     return "\n".join(out)
 
 
-def build_screen(folder, repos, max_rows):
+def build_screen(folder, repos, max_rows, notice=""):
     if not folder:
         body = [t("dock.no_folder")]
     elif not os.path.isdir(folder):
         body = [t("dock.folder_missing", path=folder)]
     else:
         body = [t("dock.folder", folder=folder)]
+    if notice:
+        body.append(notice)
     if folder and os.path.isdir(folder):
-        listing = [repo_line(repo) for repo in repos] or [t("dock.no_repos", folder=folder)]
+        listing = [repo_line(repo, number) for number, repo in enumerate(repos, 1)] or [t("dock.no_repos", folder=folder)]
     else:
         listing = []
     # pane 높이를 넘으면 목록 끝부터 줄인다. 맨 아래 입력줄이 들어갈 자리를 남겨야 스크롤이 생기지 않는다.
@@ -359,18 +365,50 @@ def read_lines(lines):
         lines.put(line.rstrip("\r\n"))
 
 
-def handle_input(text, folder):
-    """입력 한 줄을 처리한다. 돌려주는 값은 (새 folder, 바로 다시 그릴지)."""
+def pull_repo(path):
+    """fast-forward 로만 받는다. 로컬 변경이 있거나 원격과 갈라졌으면 git 이 거부하고 False 를 돌려준다."""
+    try:
+        result = subprocess.run(
+            ["git", "-C", path, "pull", "--ff-only"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=GIT_PULL_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return result.returncode == 0
+
+
+def handle_input(text, folder, selected):
+    """입력 한 줄을 처리한다.
+
+    돌려주는 값은 (새 folder, 바로 다시 그릴지, 화면에 남길 알림, 선택된 저장소 경로).
+    번호를 치면 그 저장소를 고르고, u 를 치면 고른 저장소를 pull 한다. 그 밖의 입력은 선택을 푼다.
+    """
     text = text.strip().strip('"')
+    if text.lower() == "u":
+        if selected is None:
+            return folder, True, t("dock.update_need_number"), None
+        name = os.path.basename(selected)
+        if pull_repo(selected):
+            return folder, True, t("dock.update_done", name=name), None
+        return folder, True, t("dock.update_failed", name=name), None
+    if text.isdigit():
+        repos = find_repos(folder)
+        number = int(text)
+        if not 1 <= number <= len(repos):
+            return folder, True, t("dock.update_no_repo", target=text), None
+        repo = repos[number - 1]
+        return folder, True, t("dock.selected", name=os.path.basename(repo)), repo
     if text in ("", "/refresh"):
-        return folder, True
+        return folder, True, "", None
     path = os.path.abspath(os.path.expanduser(text))
     if os.path.isdir(path):
         save_folder(path)
-        print(t("dock.folder_set", folder=path))
-        return path, True
-    print(t("dock.folder_missing", path=text))
-    return folder, True
+        return path, True, t("dock.folder_set", folder=path), None
+    return folder, True, t("dock.folder_missing", path=text), None
 
 
 class RepoScanner:
@@ -417,6 +455,8 @@ def cmd_host(args):
     last_state = None
     tick = 0
     next_refresh = 0.0
+    notice = ""
+    selected = None
     while True:
         now = time.monotonic()
         if now >= next_refresh:
@@ -429,7 +469,7 @@ def cmd_host(args):
             tick += 1
             if tick % LAYOUT_EVERY_TICKS == 0:
                 keep_at_bottom()
-            screen = build_screen(folder, repos, shutil.get_terminal_size((80, 24)).lines - 1)
+            screen = build_screen(folder, repos, shutil.get_terminal_size((80, 24)).lines - 1, notice)
             if screen != shown:
                 # 같은 자리에 덮어쓴다. 화면을 지우면 터미널 스크롤백에 이전 프레임이 쌓인다.
                 # 입력줄은 맨 아래 줄에 둔다. 입력한 글자는 이 줄에 바로 보인다.
@@ -441,7 +481,7 @@ def cmd_host(args):
             text = lines.get(timeout=INPUT_POLL_SECONDS)
         except queue.Empty:
             continue
-        folder, redraw = handle_input(text, folder)
+        folder, redraw, notice, selected = handle_input(text, folder, selected)
         if redraw:
             shown = None
             next_refresh = 0.0

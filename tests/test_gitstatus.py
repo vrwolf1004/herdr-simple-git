@@ -48,6 +48,12 @@ class ParseBranchTest(unittest.TestCase):
         self.assertEqual(gitstatus.parse_branch(header), "main")
         self.assertEqual(gitstatus.ahead_count(header), 2)
 
+    def test_upstream_and_behind(self):
+        header = "## main...origin/main [behind 3]"
+        self.assertEqual(gitstatus.parse_branch(header), "main")
+        self.assertEqual(gitstatus.behind_count(header), 3)
+        self.assertEqual(gitstatus.ahead_count(header), 0)
+
     def test_no_commits_yet(self):
         self.assertEqual(gitstatus.parse_branch("## No commits yet on develop"), "develop")
 
