@@ -19,6 +19,9 @@ PLUGIN_DIR = Path(__file__).resolve().parent.parent
 # commit-message.txt is optional; without it the commit message is "update <time>".
 CONFIG_DIR = Path(os.environ.get("HERDR_PLUGIN_CONFIG_DIR") or PLUGIN_DIR / "config")
 
+# Windows 에서 git 이 콘솔 창을 띄우지 않게 한다 (herdr-radio 와 같은 방식)
+NO_WINDOW = {"creationflags": subprocess.CREATE_NO_WINDOW} if os.name == "nt" else {}
+
 
 class PluginError(Exception):
     pass
@@ -38,6 +41,7 @@ def git(repo, args):
         text=True,
         encoding="utf-8",
         errors="replace",
+        **NO_WINDOW,
     )
     if result.returncode != 0:
         raise PluginError(t("error.git_failed", args=" ".join(args), stderr=result.stderr.strip()))
@@ -49,6 +53,7 @@ def has_commits(repo):
         ["git", "-C", repo, "rev-parse", "--verify", "--quiet", "HEAD"],
         capture_output=True,
         text=True,
+        **NO_WINDOW,
     )
     return result.returncode == 0
 
@@ -84,6 +89,7 @@ def git_raw(repo, args):
         text=True,
         encoding="utf-8",
         errors="replace",
+        **NO_WINDOW,
     )
     if result.returncode != 0:
         raise PluginError(t("error.git_failed", args=" ".join(args), stderr=result.stderr.strip()))
@@ -122,6 +128,7 @@ def has_upstream(repo):
         ["git", "-C", repo, "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"],
         capture_output=True,
         text=True,
+        **NO_WINDOW,
     )
     return result.returncode == 0
 

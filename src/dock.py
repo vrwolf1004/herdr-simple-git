@@ -67,6 +67,8 @@ ALIVE_WITHIN_SECONDS = 15
 GIT_TIMEOUT_SECONDS = 10
 GIT_PULL_TIMEOUT_SECONDS = 120  # 원격 pull 은 네트워크를 타므로 상태 조회보다 길게 기다린다
 SCAN_MIN_SECONDS = 2  # 백그라운드 스캔은 이 간격보다 자주 하지 않는다
+# Windows 에서 git 이 콘솔 창을 띄우지 않게 한다 (herdr-radio 와 같은 방식)
+NO_WINDOW = {"creationflags": subprocess.CREATE_NO_WINDOW} if os.name == "nt" else {}
 CURSOR_HOME = "\x1b[H"
 PROMPT = "> "
 ERASE_LINE = "\x1b[K"
@@ -158,6 +160,7 @@ def repo_status(path):
             encoding="utf-8",
             errors="replace",
             timeout=GIT_TIMEOUT_SECONDS,
+            **NO_WINDOW,
         )
     except (OSError, subprocess.TimeoutExpired):
         status["error"] = True
@@ -375,6 +378,7 @@ def pull_repo(path):
             encoding="utf-8",
             errors="replace",
             timeout=GIT_PULL_TIMEOUT_SECONDS,
+            **NO_WINDOW,
         )
     except (OSError, subprocess.TimeoutExpired):
         return False
