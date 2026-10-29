@@ -14,7 +14,7 @@
   "dock.folder_set": "Carpeta definida: {folder}",
   "dock.folder_missing": "No se encontró la carpeta: {path}",
   "dock.no_repos": "No hay repositorios git directamente en {folder}.",
-  "dock.help": "[ruta] elegir carpeta   [n] elegir repo, luego [u] actualizar (pull)   [/refresh] actualizar ahora",
+  "dock.help": "[ruta] elegir carpeta   [n] elegir repo, luego [u] actualizar (pull)   [Enter] actualizar ahora",
   "dock.clean": "limpio",
   "dock.changed": "{count} cambiado(s)",
   "dock.ahead": "{count} sin enviar",

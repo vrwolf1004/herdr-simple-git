@@ -14,7 +14,7 @@
   "dock.folder_set": "Ordner gesetzt: {folder}",
   "dock.folder_missing": "Ordner nicht gefunden: {path}",
   "dock.no_repos": "Direkt in {folder} gibt es keine git-Repositorys.",
-  "dock.help": "[Ordnerpfad] Ordner wählen   [Nr.] Repo wählen, dann [u] Update (pull)   [/refresh] sofort aktualisieren",
+  "dock.help": "[Ordnerpfad] Ordner wählen   [Nr.] Repo wählen, dann [u] Update (pull)   [Enter] sofort aktualisieren",
   "dock.clean": "sauber",
   "dock.changed": "{count} geändert",
   "dock.ahead": "{count} nicht gepusht",

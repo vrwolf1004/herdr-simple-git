@@ -14,7 +14,7 @@
   "dock.folder_set": "Folder set: {folder}",
   "dock.folder_missing": "Folder not found: {path}",
   "dock.no_repos": "No git repos directly under {folder}.",
-  "dock.help": "[folder path] choose folder   [n] select repo, then [u] update (pull)   [/refresh] update now",
+  "dock.help": "[folder path] choose folder   [n] select repo, then [u] update (pull)   [Enter] update now",
   "dock.clean": "clean",
   "dock.changed": "{count} changed",
   "dock.ahead": "{count} ahead",

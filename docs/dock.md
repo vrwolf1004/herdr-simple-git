@@ -19,19 +19,19 @@ The pane is a boxed panel titled `🐺  herdr-simple-git  🌕`. It shows the fo
   herdr-simple-git         main           push 전 1개
 ```
 
-The bottom help line reads `[folder path] choose folder   [n] select repo, then [u] update (pull)   [/refresh] update now` in English, and the same keys are translated in the other languages.
+The bottom help line reads `[folder path] choose folder   [n] select repo, then [u] update (pull)   [Enter] update now` in English, and the same keys are translated in the other languages.
 
 ## Choose the folder
 
 Type the folder path in the pane and press Enter. The path is saved to `config.json` in the plugin's config folder, so the next start remembers it.
 
 - Only git repos **directly** under the folder are listed. Subfolders of those repos are not scanned.
-- `/refresh` redraws the list now. The list also refreshes every 5 seconds.
+- An empty line (Enter) redraws the list now. The list also refreshes every 5 seconds.
 
 ## Update one repo
 
 - Type a repo's number to select it, then type `u` to run `git pull --ff-only` in that repo. Typing `u` without a selection asks for a number first.
-- Any other input, including `/refresh` or an empty line, clears the selection.
+- Any other input, including an empty line, clears the selection.
 - A pull that fails (local changes, divergence, or no answer within 120 seconds) is reported on the message line. The dock never pulls all repos at once.
 
 ## Start and stop

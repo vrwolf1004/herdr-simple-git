@@ -26,7 +26,7 @@ Dock pane:
 │ herdr-simple-git         main           1 ahead             │
 ├─────────────────────────────────────────────────────────────┤
 │ [folder path] choose folder   [n] select repo, then [u] update (pull) │
-│ [/refresh] update now                                        │
+│ [Enter] update now                                           │
 ╰─────────────────────────────────────────────────────────────╯
 ```
 

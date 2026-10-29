@@ -14,7 +14,7 @@
   "dock.folder_set": "Папка задана: {folder}",
   "dock.folder_missing": "Папка не найдена: {path}",
   "dock.no_repos": "В папке {folder} нет git-репозиториев.",
-  "dock.help": "[путь] выбрать папку   [номер] выбрать репо, затем [u] обновить (pull)   [/refresh] обновить сразу",
+  "dock.help": "[путь] выбрать папку   [номер] выбрать репо, затем [u] обновить (pull)   [Enter] обновить сразу",
   "dock.clean": "без изменений",
   "dock.changed": "изменено: {count}",
   "dock.ahead": "не отправлено: {count}",

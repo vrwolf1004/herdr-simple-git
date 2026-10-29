@@ -14,7 +14,7 @@
   "dock.folder_set": "폴더 설정: {folder}",
   "dock.folder_missing": "폴더를 찾을 수 없습니다: {path}",
   "dock.no_repos": "{folder} 바로 아래에 git 저장소가 없습니다.",
-  "dock.help": "[폴더 경로] 폴더 선택   [번호] 저장소 선택 후 [u] 업데이트(pull)   [/refresh] 바로 갱신",
+  "dock.help": "[폴더 경로] 폴더 선택   [번호] 저장소 선택 후 [u] 업데이트(pull)   [Enter] 바로 갱신",
   "dock.clean": "변경 없음",
   "dock.changed": "변경 {count}개",
   "dock.ahead": "push 전 {count}개",
