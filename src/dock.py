@@ -467,7 +467,7 @@ def cmd_host(args):
             scanner.request(folder)
             _, repos = scanner.latest()
             state = agent_state(repos)
-            report(pane_id, state, len(repos), state != last_state)
+            report(pane_id, state, len(repos), state != last_state or tick % LAYOUT_EVERY_TICKS == 0)
             last_state = state
             write_state("heartbeat", str(time.time()))
             tick += 1
