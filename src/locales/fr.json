@@ -1,4 +1,5 @@
 {
+  "hint.help": "Ctrl+H aide",
   "error.no_repo_config": "Indiquez le chemin du dépôt dans {path}",
   "error.git_failed": "échec de git {args}\n{stderr}",
   "error.unknown_action": "Action inconnue : {action}",
@@ -14,7 +15,7 @@
   "dock.folder_set": "Dossier défini : {folder}",
   "dock.folder_missing": "Dossier introuvable : {path}",
   "dock.no_repos": "Aucun dépôt git directement dans {folder}.",
-  "dock.help": "[chemin] choisir le dossier   [n] choisir le dépôt, puis [u] mise à jour (pull)   [Enter] mettre à jour",
+  "dock.help": "[chemin] choisir le dossier   [n] choisir le dépôt, puis [u] mise à jour (pull)   [Enter] mettre à jour   [t] thème   [l] langue",
   "dock.clean": "propre",
   "dock.changed": "{count} modifié(s)",
   "dock.ahead": "{count} non envoyé(s)",

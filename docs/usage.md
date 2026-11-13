@@ -43,11 +43,11 @@ A keyboard shortcut for an action is shown in [Setup: Optional: keyboard shortcu
 
 ## 4. Dock agent
 
-The plugin also adds one `N repos` entry to the `herdr-dock` workspace. It lists the git repositories under a folder and shows the state of each one. Starting checks for and reuses the plugin's existing pane when possible; repository scans run in the background. See [Dock agent](dock.md) for pane selection and status parsing details.
+The plugin also adds one `N repos` entry to the `herdr-dock` workspace. It lists the git repositories under a folder and shows the state of each one. Starting checks for and reuses the plugin's existing pane when possible; repository scans run in the background. In the dock pane, `Ctrl+H` opens a help popup, `t` switches the theme, and `l` switches the language. See [Dock agent](dock.md) for keys, pane selection, and status parsing details.
 
 ## 5. Language
 
-Messages follow `HERDR_SIMPLE_GIT_LANG`, then `lang` in `config.json`, then the OS language, then English. Supported: `en`, `ko`, `ja`, `ru`, `fr`, `es`, `de`. See [Setup: Language](setup.md#language).
+Messages follow `HERDR_SIMPLE_GIT_LANG`, then `lang` in `config.json`, then the OS language, then English. A language picked with `l` in the dock pane is saved and wins for the dock. Supported: `en`, `ko`, `ja`, `ru`, `fr`, `es`, `de`. See [Setup: Language](setup.md#language).
 
 ## 6. Troubleshooting
 

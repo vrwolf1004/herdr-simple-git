@@ -51,7 +51,8 @@ def _apply_flags_to_environment(argv):
 
 _apply_flags_to_environment(sys.argv)
 
-from i18n import language, t  # noqa: E402
+import i18n  # noqa: E402
+from i18n import t  # noqa: E402
 
 SOURCE = "plugin:herdr-simple-git"
 DOCK_LABEL = "herdr-dock"
@@ -76,6 +77,14 @@ ERASE_BELOW = "\x1b[J"
 AGENT_RANK = {"idle": 0, "working": 1, "blocked": 2}
 BOX_MIN_INNER = 44
 BOX_MAX_INNER = 64
+# 도크 화면 테마 (t 키로 순서대로 바꾼다). 빈 문자열은 터미널 기본색이다.
+THEMES = {
+    "phosphor": "\x1b[38;2;51;255;51m",  # 형광 녹색 #33FF33
+    "amber": "\x1b[38;2;255;176;0m",     # 호박색 #FFB000
+    "default": "",
+}
+DEFAULT_THEME = "phosphor"
+HELP_TOKEN = "\x00help"  # Ctrl+H 가 입력 맨 앞에서 눌렸을 때 입력 큐에 넣는 값 (Windows)
 
 PLUGIN_DIR = Path(__file__).resolve().parent.parent
 
@@ -195,15 +204,6 @@ def display_width(text):
     return sum(2 if unicodedata.east_asian_width(char) in ("W", "F") else 1 for char in text)
 
 
-def dim_keys(text):
-    """줄마다 첫 [ 부터 끝까지, 단축키 안내를 회색으로 한다."""
-    lines = []
-    for line in text.split("\n"):
-        index = line.find("[")
-        lines.append(line if index < 0 else line[:index] + "\x1b[2m" + line[index:] + "\x1b[0m")
-    return "\n".join(lines)
-
-
 def pad_to(text, width):
     return text + " " * max(0, width - display_width(text))
 
@@ -244,8 +244,8 @@ def repo_line(repo, number):
     return f"{number:>2} {pad_to(repo['name'], 24)} {pad_to(repo['branch'], 14)} {detail}"
 
 
-def panel(title, sections):
-    """둥근 테두리 박스. sections 사이에는 구분선을 긋는다. 긴 줄은 박스 안에서 접는다."""
+def panel(title, sections, color=""):
+    """둥근 테두리 박스. sections 사이에는 구분선을 긋는다. 긴 줄은 박스 안에서 접는다. color 는 줄마다 입힌다."""
     texts = [title] + [text for section in sections for text in section]
     inner = min(BOX_MAX_INNER, max([BOX_MIN_INNER] + [display_width(text) + 2 for text in texts]))
     width = inner - 2
@@ -257,13 +257,35 @@ def panel(title, sections):
         if index:
             out.append("├" + "─" * inner + "┤")
         for text in section:
-            for piece in wrap(text, width):
+            # 짧은 줄은 접지 않는다. 접으면 앞쪽 공백(오른쪽 정렬)이 사라진다
+            for piece in (wrap(text, width) if display_width(text) > width else [text]):
                 out.append("│ " + pad_to(piece, width) + " │")
     out.append("╰" + "─" * inner + "╯")
-    return "\n".join(out)
+    return [color + line + "\x1b[0m" for line in out]
 
 
-def build_screen(folder, repos, max_rows, notice=""):
+def hint_row(width):
+    """하단 줄: 오른쪽에 Ctrl+H 도움말(회색). 배경색 없이 글자만 쓴다."""
+    text = t("hint.help")
+    return " " * max(0, width - display_width(text)) + "[2m" + text + "[22m"
+
+
+def shortcut_rows(text):
+    """도움말 문구(항목 사이 세 칸)를 팝업 줄 목록으로 나눈다."""
+    return [row.strip() for row in text.strip().split("   ")]
+
+
+def overlay_popup(lines, rows, color):
+    """lines 가운데에 도움말 팝업 상자를 덮어쓴다. 팝업 밖의 줄은 그대로 남는다."""
+    popup = panel(t("hint.help"), [rows], color)
+    width = display_width(lines[0])
+    left = max(0, (width - display_width(popup[0])) // 2)
+    top = max(0, (len(lines) - len(popup)) // 2)
+    for index, row in enumerate(popup[:len(lines) - top]):
+        lines[top + index] = " " * left + row
+
+
+def build_screen(folder, repos, max_rows, notice="", color="", help_open=False):
     if not folder:
         body = [t("dock.no_folder")]
     elif not os.path.isdir(folder):
@@ -278,11 +300,16 @@ def build_screen(folder, repos, max_rows, notice=""):
         listing = []
     # pane 높이를 넘으면 목록 끝부터 줄인다. 맨 아래 입력줄이 들어갈 자리를 남겨야 스크롤이 생기지 않는다.
     while True:
-        sections = [body] + ([listing] if listing else []) + [[dim_keys(t("dock.help"))]]
-        screen = panel("🐺  herdr-simple-git  🌕", sections)
-        if len(screen.split("\n")) <= max_rows or len(listing) <= 1:
-            return screen
+        sections = [body] + ([listing] if listing else [])
+        inner = display_width(panel("🐺  herdr-simple-git  🌕", sections)[0]) - 2
+        # 힌트 줄은 상자 안쪽 너비(테두리 한 칸씩 제외)에 맞춘다. 그래야 상자 너비가 바뀌지 않는다
+        lines = panel("🐺  herdr-simple-git  🌕", sections + [[hint_row(inner - 2)]], color)
+        if len(lines) <= max_rows or len(listing) <= 1:
+            break
         listing = listing[:-1]
+    if help_open:
+        overlay_popup(lines, shortcut_rows(t("dock.help")), color)
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------- herdr dock
@@ -363,9 +390,39 @@ def report(pane_id, state, count, state_changed):
 # ---------------------------------------------------------------- commands
 
 
-def read_lines(lines):
+def read_lines(lines, typed):
+    """stdin 줄 입력 (Windows 가 아닌 곳). Ctrl+H 는 구분할 수 없어서 도움말 키가 없다."""
     for line in sys.stdin:
         lines.put(line.rstrip("\r\n"))
+
+
+def read_keys(lines, typed):
+    """Windows 콘솔의 키를 직접 읽는다. Ctrl+H 와 Backspace 는 같은 \\x08 이라, 입력이 비었을 때만 도움말로 본다.
+    typed["text"] 에 지금 입력 중인 글자를 둬서 화면에 바로 보이게 한다."""
+    import _thread
+    import msvcrt
+    buffer = []
+    while True:
+        if not msvcrt.kbhit():
+            time.sleep(0.03)
+            continue
+        ch = msvcrt.getwch()
+        if ch in ("\x00", "\xe0"):  # 화살표 같은 특수키는 뒤에 한 글자가 더 온다
+            msvcrt.getwch()
+            continue
+        if ch in ("\r", "\n"):
+            lines.put("".join(buffer).strip())
+            buffer.clear()
+        elif ch == "\x08" and not buffer:
+            lines.put(HELP_TOKEN)
+        elif ch in ("\x08", "\x7f"):
+            if buffer:
+                buffer.pop()
+        elif ch == "\x03":
+            _thread.interrupt_main()  # Ctrl+C 는 본 스레드에 KeyboardInterrupt 로 전한다
+        elif ch.isprintable():
+            buffer.append(ch)
+        typed["text"] = "".join(buffer)
 
 
 def pull_repo(path):
@@ -449,11 +506,24 @@ class RepoScanner:
             time.sleep(SCAN_MIN_SECONDS)
 
 
+def next_choice(current, options):
+    return options[(options.index(current) + 1) % len(options)] if current in options else options[0]
+
+
 def cmd_host(args):
     pane_id = args.pane
     lines = queue.Queue()
-    threading.Thread(target=read_lines, args=(lines,), daemon=True).start()
+    typed = {"text": ""}  # 지금 입력 중인 글자 (화면에 바로 보이게 한다)
+    reader = read_keys if os.name == "nt" else read_lines
+    threading.Thread(target=reader, args=(lines, typed), daemon=True).start()
     folder = load_config().get("folder") or ""
+    theme = read_state("theme")
+    if theme not in THEMES:
+        theme = DEFAULT_THEME
+    saved_lang = i18n.normalize(read_state("lang"))  # t, l 키로 고른 값은 환경 설정보다 우선한다
+    if saved_lang:
+        i18n.set_language(saved_lang)
+    help_open = False
     scanner = RepoScanner()
     shown = None
     last_state = None
@@ -473,17 +543,41 @@ def cmd_host(args):
             tick += 1
             if tick % LAYOUT_EVERY_TICKS == 0:
                 keep_at_bottom()
-            screen = build_screen(folder, repos, shutil.get_terminal_size((80, 24)).lines - 1, notice)
-            if screen != shown:
-                # 같은 자리에 덮어쓴다. 화면을 지우면 터미널 스크롤백에 이전 프레임이 쌓인다.
-                # 입력줄은 맨 아래 줄에 둔다. 입력한 글자는 이 줄에 바로 보인다.
-                painted = "\n".join(line + ERASE_LINE for line in screen.split("\n"))
-                print(CURSOR_HOME + painted + "\n" + ERASE_LINE + PROMPT + ERASE_BELOW, end="", flush=True)
-                shown = screen
             next_refresh = now + TICK_SECONDS
+        _, repos = scanner.latest()
+        rows = shutil.get_terminal_size((80, 24)).lines - 1
+        screen = build_screen(folder, repos, rows, notice, THEMES[theme], help_open)
+        frame = (screen, typed["text"])
+        if frame != shown:
+            # 같은 자리에 덮어쓴다. 화면을 지우면 터미널 스크롤백에 이전 프레임이 쌓인다.
+            # 입력줄은 맨 아래 줄에 둔다. 입력한 글자는 이 줄에 바로 보인다.
+            painted = "\n".join(line + ERASE_LINE for line in screen.split("\n"))
+            print(CURSOR_HOME + painted + "\n" + ERASE_LINE + PROMPT + typed["text"] + ERASE_BELOW, end="", flush=True)
+            shown = frame
         try:
             text = lines.get(timeout=INPUT_POLL_SECONDS)
         except queue.Empty:
+            continue
+        if text == HELP_TOKEN:
+            help_open = not help_open
+            shown = None
+            continue
+        if text == "t":
+            theme = next_choice(theme, list(THEMES))
+            write_state("theme", theme)
+            shown = None
+            continue
+        if text == "l":
+            # 순서: 시스템 설정 → 지원 언어들. 시스템 설정은 저장값을 지우고 환경에서 다시 정한다
+            nxt = next_choice(saved_lang or "system", ["system", *i18n.SUPPORTED])
+            if nxt == "system":
+                remove_state("lang")
+                i18n.set_language(i18n.detect())
+            else:
+                write_state("lang", nxt)
+                i18n.set_language(nxt)
+            saved_lang = None if nxt == "system" else nxt
+            shown = None
             continue
         folder, redraw, notice, selected = handle_input(text, folder, selected)
         if redraw:
@@ -507,7 +601,7 @@ def cmd_start(_args):
     herdr_api.cli(
         "pane", "run", pane_id,
         sys.executable, "-X", "utf8", os.path.abspath(__file__), "host", "--pane", pane_id,
-        "--state", str(state_dir()), "--config", str(config_dir()), "--lang", language,
+        "--state", str(state_dir()), "--config", str(config_dir()),
     )
     return 0
 

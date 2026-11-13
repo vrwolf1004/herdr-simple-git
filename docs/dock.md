@@ -10,7 +10,7 @@ The dock agent shows how many git repos are in a folder, in herdr's agents panel
   - `idle`: no repo has local changes or commits ahead of its locally recorded upstream state
 - **Focus the entry** (click it in the agents panel): the pane shows each repo with its branch and state. A repo behind its upstream shows `N to pull`; one ahead shows `N ahead` (`push 전` in Korean).
 
-The pane is a boxed panel titled `🐺  herdr-simple-git  🌕`. It shows the folder, then one line per repo with its branch and state, and an input help line at the bottom. Type your input on the line below the box. Korean example of the repo lines:
+The pane is a boxed panel titled `🐺  herdr-simple-git  🌕`. It shows the folder, then one line per repo with its branch and state, and a bottom line with `Ctrl+H help` on the right. Type your input on the line below the box. Korean example of the repo lines:
 
 ```
 폴더: C:\work\app
@@ -19,7 +19,12 @@ The pane is a boxed panel titled `🐺  herdr-simple-git  🌕`. It shows the fo
   herdr-simple-git         main           push 전 1개
 ```
 
-The bottom help line reads `[folder path] choose folder   [n] select repo, then [u] update (pull)   [Enter] update now` in English, and the same keys are translated in the other languages.
+Press `Ctrl+H` to open a help popup over the panel; press it again to close it. In English it lists `[folder path] choose folder`, `[n] select repo, then [u] update (pull)`, `[Enter] update now`, `[t] theme`, and `[l] language`. The same keys are translated in the other languages. `Ctrl+H` works on Windows, and only when the input line is empty (Ctrl+H and Backspace are the same key code there).
+
+## Theme and language
+
+- Type `t` and press Enter to switch the theme: phosphor green → amber → terminal default. The choice is saved in the state folder (`theme`).
+- Type `l` and press Enter to switch the language: system → `en` → `ko` → `ru` → `fr` → `es` → `de` → `ja` → system. The choice is saved in the state folder (`lang`) and wins over the environment setting. `system` removes the saved choice.
 
 ## Choose the folder
 
@@ -55,7 +60,8 @@ herdr plugin action invoke dock-stop --plugin herdr-simple-git            # Linu
 - The host loop runs inside the dock pane. Closing the pane stops it.
 - Each scan runs `git status --porcelain=v1 -b -z` for every repo (with a 10-second timeout per repo). The shared status parser handles NUL-delimited paths, including paths with spaces, quotes, or newlines, and skips the extra old-path token used for renames and copies. Scanning runs in a background thread so it does not block pane input. There is no fetch or network access; `ahead` is based on the locally recorded upstream state, typically from the last fetch.
 - Every third refresh, the workspace is moved to the bottom of the list, as herdr-timekit does.
-- The host reads the state, config, and language paths from `start`, because the pane does not get the `HERDR_PLUGIN_*` variables.
+- The host reads the state and config paths from `start`, because the pane does not get the `HERDR_PLUGIN_*` variables. The language comes from the saved `lang` choice, then the usual order (environment variable, `config.json`, OS language).
+- On Windows the host reads keys directly from the console so it can tell Ctrl+H apart; what you type is shown on the input line.
 
 ## Limits
 

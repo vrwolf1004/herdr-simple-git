@@ -71,9 +71,21 @@ def _load(language):
         return {}
 
 
-language = normalize(os.environ.get("HERDR_SIMPLE_GIT_LANG")) or _from_plugin_config() or _from_os() or DEFAULT
+def detect():
+    """환경 설정에서 정한 언어. 저장된 선택(state)은 호출하는 쪽이 따로 본다."""
+    return normalize(os.environ.get("HERDR_SIMPLE_GIT_LANG")) or _from_plugin_config() or _from_os() or DEFAULT
+
+
+def set_language(code):
+    """언어를 바꾼다. 지원하지 않는 값이면 en."""
+    global language, _messages
+    language = normalize(code) or DEFAULT
+    _messages = _fallback if language == DEFAULT else _load(language)
+
+
 _fallback = _load(DEFAULT)
-_messages = _fallback if language == DEFAULT else _load(language)
+language = DEFAULT
+set_language(detect())
 
 
 def t(key, **values):

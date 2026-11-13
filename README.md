@@ -17,20 +17,33 @@ Agents sidebar:
 Dock pane:
 
 ```text
-╭─────────────────────────────────────────────────────────────╮
-│              🐺  herdr-simple-git  🌕                      │
-├─────────────────────────────────────────────────────────────┤
-│ Folder: C:\work\app                                          │
-│ herdr-talk               main           clean               │
-│ herdr-timekit            main           1 changed           │
-│ herdr-simple-git         main           1 ahead             │
-├─────────────────────────────────────────────────────────────┤
-│ [folder path] choose folder   [n] select repo, then [u] update (pull) │
-│ [Enter] update now                                           │
-╰─────────────────────────────────────────────────────────────╯
+╭────────────────────────────────────────────────────────╮
+│              🐺  herdr-simple-git  🌕                  │
+├────────────────────────────────────────────────────────┤
+│ Folder: C:\work\app                                    │
+│ herdr-talk               main           clean          │
+│ herdr-timekit            main           1 changed      │
+│ herdr-simple-git         main           1 ahead        │
+├────────────────────────────────────────────────────────┤
+│                                    Ctrl+H help         │
+╰────────────────────────────────────────────────────────╯
 ```
 
+Press `Ctrl+H` to open the help popup. Press `Ctrl+H` again to close it. The popup lists the folder path, repo number + `u` (pull), Enter, `t` (theme), and `l` (language).
+
 The optional dock agent lists repositories directly under a folder and shows local changes and commits ahead of each branch's locally recorded upstream state. It does not fetch. Starting it checks for its existing pane and reuses it when available; otherwise it reuses an empty dock pane or creates one. Repository scans run in the background, and `git status --porcelain=v1 -b -z` is parsed safely for paths that contain spaces, quotes, or newlines.
+
+### Keys
+
+| Key | Action |
+| --- | --- |
+| folder path + Enter | Choose the folder whose subfolders are repositories |
+| number + Enter | Select a repository |
+| `u` + Enter | Pull the selected repository (`--ff-only`) |
+| Enter | Refresh now |
+| `t` + Enter | Next theme: phosphor green → amber → terminal default (saved) |
+| `l` + Enter | Next language: system → en → ko → ru → fr → es → de → ja → system (saved) |
+| `Ctrl+H` | Show or hide the help popup (Windows, when the input line is empty) |
 
 ## Installation
 

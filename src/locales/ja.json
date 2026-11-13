@@ -1,4 +1,5 @@
 {
+  "hint.help": "Ctrl+H ヘルプ",
   "error.no_repo_config": "{path} にリポジトリのパスを書いてください",
   "error.git_failed": "git {args} に失敗しました\n{stderr}",
   "error.unknown_action": "不明な action: {action}",
@@ -14,7 +15,7 @@
   "dock.folder_set": "フォルダを設定しました: {folder}",
   "dock.folder_missing": "フォルダが見つかりません: {path}",
   "dock.no_repos": "{folder} 直下に git リポジトリがありません。",
-  "dock.help": "[フォルダのパス] フォルダを選択   [番号] リポジトリを選択後 [u] 更新(pull)   [Enter] 今すぐ更新",
+  "dock.help": "[フォルダのパス] フォルダを選択   [番号] リポジトリを選択後 [u] 更新(pull)   [Enter] 今すぐ更新   [t] テーマ   [l] 言語",
   "dock.clean": "変更なし",
   "dock.changed": "変更 {count} 件",
   "dock.ahead": "プッシュ前 {count} 件",

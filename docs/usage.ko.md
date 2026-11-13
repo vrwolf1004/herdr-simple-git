@@ -43,11 +43,11 @@ herdr plugin action invoke update --plugin herdr-simple-git
 
 ## 4. Dock 에이전트
 
-플러그인은 `herdr-dock` workspace에 `N repos` 항목도 하나 추가합니다. 폴더 아래의 git 저장소 목록과 각 저장소의 상태를 보여 줍니다. 시작 시 기존 pane을 확인해 재사용하고 저장소 스캔은 백그라운드에서 실행합니다. pane 선택과 상태 파싱은 [Dock 에이전트](dock.md)를 보세요.
+플러그인은 `herdr-dock` workspace에 `N repos` 항목도 하나 추가합니다. 폴더 아래의 git 저장소 목록과 각 저장소의 상태를 보여 줍니다. 시작 시 기존 pane을 확인해 재사용하고 저장소 스캔은 백그라운드에서 실행합니다. dock pane에서 `Ctrl+H`는 도움말 팝업, `t`는 테마 전환, `l`은 언어 전환입니다. 키, pane 선택, 상태 파싱은 [Dock 에이전트](dock.md)를 보세요.
 
 ## 5. 언어
 
-메시지 언어는 `HERDR_SIMPLE_GIT_LANG` 환경 변수, `config.json`의 `lang`, OS 언어, 영어 순서로 정해집니다. 지원 언어: `en`, `ko`, `ja`, `ru`, `fr`, `es`, `de`. [설정: 언어](setup.md#language)를 보세요.
+메시지 언어는 `HERDR_SIMPLE_GIT_LANG` 환경 변수, `config.json`의 `lang`, OS 언어, 영어 순서로 정해집니다. dock pane에서 `l`로 고른 언어는 저장되며 dock에서는 이 값이 우선합니다. 지원 언어: `en`, `ko`, `ja`, `ru`, `fr`, `es`, `de`. [설정: 언어](setup.md#language)를 보세요.
 
 ## 6. 문제 해결
 
